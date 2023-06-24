@@ -1,10 +1,10 @@
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 public class RegularVendingMachine {
 
     private Item[] itemSlots = new Item[8];
     private Wallet machineWallet = new Wallet();
-    private TreeMap<Double, Integer> denominations = machineWallet.getDenominations();
     private ArrayList<String> purchaseHistory = new ArrayList<String>();
     public RegularVendingMachine(Item[] itemSlots){
         this.itemSlots = itemSlots;
@@ -15,21 +15,15 @@ public class RegularVendingMachine {
     public void setItemSlots(Item[] itemSlots) {
         this.itemSlots = itemSlots;
     }
-    public TreeMap<Double, Integer> getDenominations() {
-        return denominations;
-    }
     public Wallet getMachineWallet() {
         return machineWallet;
-    }
-    public void setDenominations(TreeMap<Double, Integer> denominations) {
-        this.denominations = denominations;
     }
     public double getCurrentFunds(){
 
         double currentFunds = 0;
 
-        for (double key : denominations.keySet()) {
-            int count = denominations.get(key);
+        for (double key : machineWallet.getDenominations().keySet()) {
+            int count = machineWallet.getDenominations().get(key);
             double amount = key * count;
             currentFunds += amount;
         }
@@ -38,11 +32,11 @@ public class RegularVendingMachine {
     }
 
     public void withdrawCurrentFunds(){
+        machineWallet.withdrawAll();
+    }
 
-        for (double key : denominations.keySet()) {
-            denominations.put(key, 0);
-        }
-
+    public void insertMachineFunds(double key, int amount){
+        machineWallet.insertDenomination(key, amount);
     }
 
     public void dispenseItem(int itemIndex){
@@ -50,34 +44,6 @@ public class RegularVendingMachine {
         System.out.println("Successfully dispensed!");
         System.out.println("Received: 1x " + itemSlots[itemIndex].getName());
         itemSlots[itemIndex].setAmount(newAmount);
-    }
-
-    public void addDenominations(double denominationValue, int amountAdded){
-        int newAmount = denominations.get(denominationValue) + amountAdded;
-        denominations.put(denominationValue, newAmount);
-    }
-
-    public void stockItems(int itemIndex, int stock){
-        int newStock = itemSlots[itemIndex].getAmount() + stock;
-        itemSlots[itemIndex].setAmount(newStock);
-    }
-
-    public double purchaseItem(double insertedCash, int itemIndex){
-        // returns the change
-        if (insertedCash >= itemSlots[itemIndex].getPrice()) {
-
-            double change = insertedCash - itemSlots[itemIndex].getPrice();
-
-            /* if (hasEnoughDenominations(change)){
-                updatePurchaseHistory(insertedCash, itemIndex, change);
-                return change;
-            }
-
-            else
-                return insertedCash;*/
-        }
-
-        return insertedCash;
     }
 
     public boolean hasEnoughDenominations(TreeMap<Double, Integer> change){
@@ -99,7 +65,7 @@ public class RegularVendingMachine {
         String givenChange = Double.toString(change);
         String totalFunds = Double.toString(getCurrentFunds());
         
-        String transaction = "User purchased " + itemName + "given " + givenMoney + "with change " + givenChange +". Total funds as of this purchase: " + totalFunds;
+        String transaction = "User purchased " + itemName + ", given P" + givenMoney + " with change P" + givenChange +", total funds as of this purchase: " + totalFunds;
         purchaseHistory.add(transaction);
     }
     public void displayInventory(){
@@ -110,8 +76,8 @@ public class RegularVendingMachine {
             index++;
         }
         System.out.println();
-        for (Double i : denominations.keySet()) {
-            System.out.println("Denomination: " + i + ", Amount: " + denominations.get(i));
+        for (Double i : machineWallet.getDenominations().keySet()) {
+            System.out.println("Denomination: " + i + ", Amount: " + machineWallet.getDenominations().get(i));
         }
         System.out.println("Current Total Funds in The Machine: " + getCurrentFunds());
     }
@@ -125,32 +91,36 @@ public class RegularVendingMachine {
 
     }
     public void displayPurchaseHistory(){
-
-    }
-    
-    public TreeMap<Double, Integer> convertToDenominations(double cashMoney){
-        // TODO: returns a TreeMap of denomination:amount pairs given an amount of money
-
-        TreeMap<Double, Integer> newDenominations = new TreeMap<Double, Integer>();;
-        newDenominations.put(0.01, 0);
-        newDenominations.put(0.05, 0);
-        newDenominations.put(0.25, 0);
-        newDenominations.put(1.00, 0);
-        newDenominations.put(5.00, 0);
-        newDenominations.put(10.00, 0);
-        newDenominations.put(20.00, 0);
-        newDenominations.put(50.00, 0);
-        newDenominations.put(100.00, 0);
-        newDenominations.put(200.00, 0);
-        newDenominations.put(500.00, 0);
-        newDenominations.put(1000.00, 0);
-
-        return newDenominations;
+        for (String record : purchaseHistory){
+            System.out.println(record);
+        }
     }
 
+    public void displayReceivedChange(double changeVal){
 
-
-
-
+        TreeMap<Double, Integer> change = machineWallet.convertToDenominations(changeVal);
+        String currencyName, type;
+        if (changeVal > 0) {
+            System.out.println("Your Change:");
+            for (Map.Entry<Double, Integer> entry : change.entrySet()) {
+                double denomination = entry.getKey();
+                int count = entry.getValue();
+                if (count > 0) {
+                    if (entry.getKey() < 1) {
+                        denomination *= 10;
+                        currencyName = " Centavo ";
+                        type = "Coin";
+                    } else if (entry.getKey() >= 1 && entry.getKey() < 20) {
+                        currencyName = " Peso ";
+                        type = "Coin";
+                    } else {
+                        currencyName = " Peso ";
+                        type = "Bill";
+                    }
+                    System.out.println(count + "x " + denomination + currencyName + type);
+                }
+            }
+        }
+    }
 
 }
