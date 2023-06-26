@@ -48,13 +48,13 @@ public class Customer {
                     }
                     else if (productChoice >= 0 && productChoice < 8){
                         // The change is calculated by getting the difference of the total funds and price of the selected item.
-                        double change = userWallet.getTotal() - current.getItemSlots()[productChoice].getPrice();
-                        current.getMachineWallet().addCash(userWallet); // The denominations inside userWallet is added into the machineWallet.
+                        double change = userWallet.getTotal() - current.getItemPrice(productChoice);
+                        current.addFunds(userWallet); // The denominations inside userWallet is added into the machineWallet.
                         if (change >= 0 && current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
                             // If the machine has enough denominations to provide the change, continues.
                             // The product is dispensed from the machine, the change (in denominations) are subtracted from the machine and is given to the user.
                             current.dispenseItem(productChoice);
-                            current.getMachineWallet().subtractCash(change);
+                            current.subtractFunds(change);
                             current.displayReceivedChange(change);
                             // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
                             userWallet.resetWallet();
@@ -64,14 +64,14 @@ public class Customer {
                         else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
                             // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
                             System.out.println("Error: Not enough funds in the machine for change!");
-                            current.getMachineWallet().subtractCash(userWallet);
+                            current.subtractFunds(userWallet);
                             userWallet.withdrawAll();
                             System.out.println("Inserted funds have been returned.");
                         }
                         else{
                             // Else, if the change value reaches a negative number, displays an insufficient funds message
                             System.out.println("Insufficient Funds!");
-                            current.getMachineWallet().subtractCash(userWallet);
+                            current.subtractFunds(userWallet);
                             userWallet.withdrawAll();
                             System.out.println("Transaction aborted!");
                         }

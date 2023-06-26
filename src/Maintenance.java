@@ -37,9 +37,8 @@ public class Maintenance {
      * @param currentVM is the vending machine to be used
      */
     private void addItems(RegularVendingMachine currentVM){
-
-        int index = input.nextInt(); // Gets a user's integer input corresponding to the ID/index of the item to add
-        Item[] newItems = currentVM.getItemSlots();
+        currentVM.displayProducts();
+        int index = -1; // Gets a user's integer input corresponding to the ID/index of the item to add
         while (index > 7 || index < 0){ // Continues loop until user inputs a valid index
             System.out.print("Select the ID of the item to be restocked: ");
             index = input.nextInt();
@@ -47,21 +46,22 @@ public class Maintenance {
                 System.out.print("Error: Unknown ID, please try again.");
             }
         }
-        System.out.print("How many items to add? "); // Once a valid index has been picked, ask for input amount for items to add
-        int itemsToAdd = input.nextInt();
-        if (newItems[index].getAmount() == 10){
+
+        if (currentVM.getItemAmount(index) == 10){
             System.out.println("Error: Item slot already full!"); // If the amount of the item in the slot is already at max, displays an error message.
         }
-        else if (newItems[index].getAmount() + itemsToAdd > 10){
-            System.out.println("Error: Too many items to add!"); // If the amount of items to add makes it so that the item amount exceeds the maximum, displays an error message.
+        else{
+            System.out.print("How many items to add? "); // Once a valid index has been picked, ask for input amount for items to add
+            int itemsToAdd = input.nextInt();
+            if (currentVM.getItemAmount(index) + itemsToAdd > 10) {
+                System.out.println("Error: Too many items to add!"); // If the amount of items to add makes it so that the item amount exceeds the maximum, displays an error message.
+            }
+            else{ // Else, if everything is valid, the additional items will be added into the machine
+                currentVM.addItemStock(index, itemsToAdd);
+                System.out.println("Successfully added " + itemsToAdd + " " + currentVM.getItemName(index) + " into the machine.");
+            }
         }
-        else{ // Else, if everything is valid, the additional items will be added into the machine
-            int itemsAdded = itemsToAdd;
-            itemsToAdd += newItems[index].getAmount();
-            newItems[index].setAmount(itemsToAdd);
-            currentVM.setItemSlots(newItems);
-            System.out.println("Successfully added " + itemsAdded + " " + newItems[index].getName() + " into the machine.");
-        }
+
     }
     /**
      * <p>Allows the user to add to change the price of an item in the vending machine.</p>
@@ -70,7 +70,6 @@ public class Maintenance {
      */
     private void changeItemPrice(RegularVendingMachine currentVM){
 
-        Item[] newItems = currentVM.getItemSlots();
         int index = -1;
 
         while (index > 7 || index < 0){ // Continues loop until user inputs a valid index
@@ -80,12 +79,11 @@ public class Maintenance {
                 System.out.print("Error: Unknown ID, please try again.");
             }
         }
-        double oldPrice = newItems[index].getPrice();
+        double oldPrice = currentVM.getItemPrice(index);
         System.out.print("What should be the new price? "); // Gets user input for the new price and sets it as the new price once confirmed.
         double newPrice = input.nextDouble();
-        newItems[index].setPrice(newPrice);
-        currentVM.setItemSlots(newItems);
-        System.out.println("Successfully updated the price of " + newItems[index].getName() + " from " + oldPrice + " to " + newPrice);
+        currentVM.setItemPrice(index, newPrice);
+        System.out.println("Successfully updated the price of " + currentVM.getItemName(index) + " from " + oldPrice + " to " + newPrice);
     }
     /**
      * <p>Allows the user to withdraw all the funds in the vending machine (inside the machineWallet)</p>
@@ -97,8 +95,8 @@ public class Maintenance {
             System.out.println("Error: No money in the machine!"); // Displays error message when there are no funds in the machine.
         }
         else{
-            currentVM.withdrawCurrentFunds();
             System.out.println("Successfully withdrawn " + currentVM.getCurrentFunds() + " from the machine.");
+            currentVM.withdrawCurrentFunds();
         }
     }
 
