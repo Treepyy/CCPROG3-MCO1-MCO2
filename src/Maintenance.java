@@ -2,10 +2,17 @@ import java.util.Scanner;
 
 public class Maintenance {
     private Scanner input = new Scanner(System.in);
+
+    /**
+     * <p>Displays the maintenance menu and allows the user to select which action to perform on the machine.</p>
+     *
+     * @param currentVM is the vending machine to be used
+     */
     public void performMaintenance(RegularVendingMachine currentVM) {
 
-        int choice = 0;
+        int choice = -1;
 
+        // Continues loop until user inputs [7] for exiting.
         while (choice != 7) {
 
             displayOptions();
@@ -24,26 +31,31 @@ public class Maintenance {
         }
     }
 
+    /**
+     * <p>Allows the user to add to the amount of items in the vending machine</p>
+     *
+     * @param currentVM is the vending machine to be used
+     */
     private void addItems(RegularVendingMachine currentVM){
 
-        int index = input.nextInt();
+        int index = input.nextInt(); // Gets a user's integer input corresponding to the ID/index of the item to add
         Item[] newItems = currentVM.getItemSlots();
-        while (index > 7 || index < 0){
+        while (index > 7 || index < 0){ // Continues loop until user inputs a valid index
             System.out.print("Select the ID of the item to be restocked: ");
             index = input.nextInt();
             if (index > 7 || index < 0){
                 System.out.print("Error: Unknown ID, please try again.");
             }
         }
-        System.out.print("How many items to add? ");
+        System.out.print("How many items to add? "); // Once a valid index has been picked, ask for input amount for items to add
         int itemsToAdd = input.nextInt();
         if (newItems[index].getAmount() == 10){
-            System.out.println("Error: Item slot already full!");
+            System.out.println("Error: Item slot already full!"); // If the amount of the item in the slot is already at max, displays an error message.
         }
         else if (newItems[index].getAmount() + itemsToAdd > 10){
-            System.out.println("Error: Too many items to add!");
+            System.out.println("Error: Too many items to add!"); // If the amount of items to add makes it so that the item amount exceeds the maximum, displays an error message.
         }
-        else{
+        else{ // Else, if everything is valid, the additional items will be added into the machine
             int itemsAdded = itemsToAdd;
             itemsToAdd += newItems[index].getAmount();
             newItems[index].setAmount(itemsToAdd);
@@ -51,13 +63,17 @@ public class Maintenance {
             System.out.println("Successfully added " + itemsAdded + " " + newItems[index].getName() + " into the machine.");
         }
     }
-
+    /**
+     * <p>Allows the user to add to change the price of an item in the vending machine.</p>
+     *
+     * @param currentVM is the vending machine to be used
+     */
     private void changeItemPrice(RegularVendingMachine currentVM){
 
         Item[] newItems = currentVM.getItemSlots();
         int index = -1;
 
-        while (index > 7 || index < 0){
+        while (index > 7 || index < 0){ // Continues loop until user inputs a valid index
             System.out.print("Select the ID of the item to set a price: ");
             index = input.nextInt();
             if (index > 7 || index < 0){
@@ -65,31 +81,42 @@ public class Maintenance {
             }
         }
         double oldPrice = newItems[index].getPrice();
-        System.out.print("What should be the new price? ");
+        System.out.print("What should be the new price? "); // Gets user input for the new price and sets it as the new price once confirmed.
         double newPrice = input.nextDouble();
         newItems[index].setPrice(newPrice);
         currentVM.setItemSlots(newItems);
         System.out.println("Successfully updated the price of " + newItems[index].getName() + " from " + oldPrice + " to " + newPrice);
     }
+    /**
+     * <p>Allows the user to withdraw all the funds in the vending machine (inside the machineWallet)</p>
+     *
+     * @param currentVM is the vending machine to be used
+     */
     private void withdrawFunds(RegularVendingMachine currentVM){
         if (currentVM.getCurrentFunds() == 0){
-            System.out.println("Error: No money in the machine!");
+            System.out.println("Error: No money in the machine!"); // Displays error message when there are no funds in the machine.
         }
         else{
             currentVM.withdrawCurrentFunds();
             System.out.println("Successfully withdrawn " + currentVM.getCurrentFunds() + " from the machine.");
         }
     }
+
+    /**
+     * <p>Allows the user to add any amount of any valid denomination into the machine</p>
+     *
+     * @param currentVM is the vending machine to be used
+     */
     private void addDenominations(RegularVendingMachine currentVM){
 
         int choice = -1, amountToAdd;
         double keyChoice;
-        while (choice != 0){
+        while (choice != 0){ // Continues loop until user inputs [0] to exit
 
             displayDenominations();
             choice = input.nextInt();
 
-            if (choice > 0 && choice < 13){
+            if (choice > 0 && choice < 13){ // If choice is valid, prompts for the amount to add, then adds to the machine.
                 keyChoice = convertToKey(choice);
                 System.out.print("Enter number of bills/coins to add: ");
                 amountToAdd = input.nextInt();
@@ -105,6 +132,9 @@ public class Maintenance {
         }
     }
 
+    /**
+     * <p>Displays all the available maintenance options.</p>
+     */
     private void displayOptions(){
         System.out.println("Choose option:");
         System.out.println("[1] Restock/Stock Item");
@@ -116,6 +146,10 @@ public class Maintenance {
         System.out.println("[7] Exit");
         System.out.print("Pick an option: ");
     }
+
+    /**
+     * <p>Displays the available denominations to pick from. (for addDenominations menu)</p>
+     */
     private void displayDenominations(){
         System.out.println("What to add?");
         System.out.println("[0] Exit");
@@ -134,6 +168,13 @@ public class Maintenance {
         System.out.print("Pick an option: ");
     }
 
+    /**
+     * <p>Converts the user's choice input to a corresponding key value.</p>
+     * <p><b>Precondition:</b>  The choice value is within the set range of (1,12)</p>
+     *
+     * @param choice the choice to convert
+     * @return the key value corresponding to the choice
+     */
     private double convertToKey(int choice){
 
         double keyChoice = switch (choice) {

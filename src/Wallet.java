@@ -5,6 +5,10 @@ public class Wallet {
 
     private TreeMap<Double, Integer> denominations = new TreeMap<Double, Integer>();
 
+    /**
+     * <p>Constructs a new Wallet and sets the default denominations.</p>
+     * <p>The denominations are then arranged as a treemap to preserve the value hierarchy.</p>
+     */
     public Wallet(){
         denominations.put(1000.00, 0);
         denominations.put(500.00, 0);
@@ -21,10 +25,20 @@ public class Wallet {
         denominations.put(0.01, 0);
     }
 
+    /**
+     * <p>Returns the denominations of a wallet.</p>
+     *
+     * @return the denominations tree map
+     */
     public TreeMap<Double, Integer> getDenominations() {
         return denominations;
     }
 
+    /**
+     * <p>Calculates the total by multiplying each denomination by its amount then adding them together.</p>
+     *
+     * @return the total amount of cash in the Wallet
+     */
     public double getTotal(){
 
         double total = 0;
@@ -38,18 +52,35 @@ public class Wallet {
         return total;
     }
 
+    /**
+     * <p>Inserts a specific amount of a certain denomination into the Wallet.</p>
+     *
+     * @param key is the denomination (bill/coin) to be added
+     * @param amount is the number of the denomination(s) to be added
+     */
     public void insertDenomination(double key, int amount){
         int newAmount = denominations.get(key) + amount;
         denominations.put(key, newAmount);
     }
 
+    /**
+     * <p>Withdraws all cash in the Wallet.</p>
+     * <p>Resets all denominations to 0 and displays what the user receives.</p>
+     * TODO: merge with resetWallet()?
+     */
     public void withdrawAll(){
         if (getTotal() != 0.0){
             displayReceivedDenominations(denominations);
             resetWallet();
         }
     }
-    // converts a double value into a denomination treemap
+
+    /**
+     * <p>Converts a given double value into a denomination treemap.</p>
+     *
+     * @param cash is the double value to be converted
+     * @return a treemap of the denominations which total to the given cash value
+     */
     public TreeMap<Double, Integer> convertToDenominations(double cash){
 
         TreeMap<Double, Integer> converted = new TreeMap<Double, Integer>();
@@ -80,6 +111,11 @@ public class Wallet {
     }
 
     // this method will convert a given double value into denominations, then add it to the treemap
+    /**
+     * <p>Adds a given Wallet's denominations into this Wallet</p>
+     *
+     * @param addedWallet is the Wallet whose denominations are to be added
+     */
     public void addCash(Wallet addedWallet){
 
         for (double key : denominations.keySet()) {
@@ -102,6 +138,12 @@ public class Wallet {
 
     }
 
+    /**
+     * <p>Subtracts a given Wallet's denominations into this Wallet</p>
+     * <p><b>Precondition:</b> the resulting denominations when this operation is performed will not have negative values</p>
+     *
+     * @param subtractedWallet is the Wallet whose denominations are to be subtracted
+     */
     public void subtractCash(Wallet subtractedWallet){
 
         for (double key : denominations.keySet()) {
@@ -111,7 +153,13 @@ public class Wallet {
 
     }
 
-    // this method will convert a given double value into denominations, then subtract it from the treemap
+    /**
+     * <p>Subtracts a given Wallet's denominations into this Wallet, given a cash value.</p>
+     * <p><b>Precondition:</b> the resulting denominations when this operation is performed will not have negative values</p>
+     * TODO: Update to use convertToDenominations() method
+     *
+     * @param cash is the double amount to subtract from the Wallet
+     */
     public void subtractCash(double cash){
 
         // loops through the entire treemap
@@ -125,12 +173,23 @@ public class Wallet {
 
     }
 
+    /**
+     * <p>Resets all denominations to 0</p>
+     *
+     */
     public void resetWallet(){
         for (double key : denominations.keySet()) {
             denominations.put(key, 0);
         }
     }
 
+    /**
+     * <p>Displays a given denominations treemap as items received.</p>
+     * <p>Sorts each denomination into either bills or coins before displaying.</p>
+     * TODO: move to RegularVendingMachine?
+     *
+     * @param denominations is the treemap to be displayed as items received
+     */
     private void displayReceivedDenominations(TreeMap<Double, Integer> denominations){
 
         String currencyName, type;

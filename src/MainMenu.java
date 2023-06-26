@@ -1,6 +1,5 @@
-import java.util.TreeMap;
-import java.util.Objects;
 import java.util.Scanner;
+
 public class MainMenu {
     private Scanner input = new Scanner(System.in);
     private RegularVendingMachine currentVM;
@@ -8,10 +7,14 @@ public class MainMenu {
     private Customer currentCustomer;
     private Maintenance currentManager;
 
-    public void mainMenu() {
+    /**
+     * <p>Displays the main menu and allows the user to input integers for navigation.</p>
+     */
+    public void displayMenu() {
 
         int choice = 0;
 
+        // Continues loop until user inputs [3] for exiting.
         while (choice != 3) {
             System.out.println("Welcome to the Vending Machine Factory Simulator!");
             System.out.println("[1] Create a Vending Machine");
@@ -38,6 +41,9 @@ public class MainMenu {
         }
     }
 
+    /**
+     * <p>Displays the menu for creating a VendingMachine instance.</p>
+     */
     private void createVendingMachineMenu() {
 
         defaultItems[0] = new Item("Coke", 10, 139, 50.00);
@@ -53,6 +59,7 @@ public class MainMenu {
         int choice = 0;
         int confirmation;
 
+        // Continues loop until user inputs [3] for exiting.
         while (choice != 3) {
             System.out.println("What would you like to create:");
             System.out.println("[1] Regular Vending Machine");
@@ -62,19 +69,19 @@ public class MainMenu {
             choice = input.nextInt();
             switch (choice) {
                 case 1:
-                    if (currentVM == null) {
+                    if (currentVM == null) { // If there is no current VendingMachine instance, proceeds to creation.
                         currentVM = new RegularVendingMachine(defaultItems);
                         System.out.println("You successfully created a new regular vending machine.");
-                    } else {
+                    } else { // If there is already an existing VendingMachine instance, displays a confirmation message first.
                         System.out.println("Creating a new vending machine will overwrite the current one, continue? (Y/N)");
                         System.out.println("[1] Yes");
                         System.out.println("[2] No");
                         System.out.print("Pick an option: ");
                         confirmation = input.nextInt();
-                        if (confirmation == 1) {
+                        if (confirmation == 1) { // If user confirms, creates a new instance which overwrites the first one.
                             currentVM = new RegularVendingMachine(defaultItems);
                             System.out.println("You successfully created a new regular vending machine.");
-                        } else {
+                        } else { // Else, the operation is aborted and the user is returned to the previous choice.
                             System.out.println("Operation aborted.");
                         }
                     }
@@ -82,7 +89,6 @@ public class MainMenu {
                     break;
 
                 case 2:
-                    // current = new RegularVendingMachine(true);
                     System.out.println("Currently Unavailable...");
                     break;
 
@@ -98,13 +104,16 @@ public class MainMenu {
 
     }
 
+    /**
+     * <p>Displays the menu for testing the functions of the created VendingMachine</p>
+     */
     private void testVendingMachineMenu() {
 
         int choice = 0;
-        if (currentVM == null) {
+        if (currentVM == null) { // If there is no current VendingMachine instance, displays an error message.
             System.out.println("Error: Please create a Vending Machine first!");
         } else {
-            while (choice != 3) {
+            while (choice != 3) { // Else, continues to the testing menu.
                 System.out.println("What would you like to test:");
                 System.out.println("[1] Vending Features");
                 System.out.println("[2] Maintenance Features");
@@ -113,11 +122,11 @@ public class MainMenu {
                 choice = input.nextInt();
 
                 switch (choice) {
-                    case 1:
+                    case 1: // If the user chooses to test the vending features, the currentCustomer is instantiated.
                         currentCustomer = new Customer();
                         currentCustomer.purchaseItem(currentVM);
                         break;
-                    case 2:
+                    case 2: // If the user chooses to test the maintenance features, the currentManager is instantiated.
                         currentManager = new Maintenance();
                         currentManager.performMaintenance(currentVM);
                         break;
