@@ -23,7 +23,7 @@ public class Maintenance {
                 case 2 -> changeItemPrice(currentVM);
                 case 3 -> withdrawFunds(currentVM);
                 case 4 -> addDenominations(currentVM);
-                case 5 -> currentVM.displayPurchaseHistory();
+                case 5 -> currentVM.displayMachineHistory();
                 case 6 -> currentVM.displayInventory();
                 case 7 -> System.out.println("Returning to previous menu...");
                 default -> System.out.println("Invalid choice. Please try again.");
@@ -56,9 +56,11 @@ public class Maintenance {
             if (currentVM.getItemAmount(index) + itemsToAdd > 10) {
                 System.out.println("Error: Too many items to add!"); // If the amount of items to add makes it so that the item amount exceeds the maximum, displays an error message.
             }
-            else{ // Else, if everything is valid, the additional items will be added into the machine
+            else{ // Else, if everything is valid, the additional items will be added into the machine and a history record will be made
+                int previousStock = currentVM.getItemAmount(index);
                 currentVM.addItemStock(index, itemsToAdd);
                 System.out.println("Successfully added " + itemsToAdd + " " + currentVM.getItemName(index) + " into the machine.");
+                currentVM.updateStockHistory(index, itemsToAdd, previousStock);
             }
         }
 
@@ -82,8 +84,15 @@ public class Maintenance {
         double oldPrice = currentVM.getItemPrice(index);
         System.out.print("What should be the new price? "); // Gets user input for the new price and sets it as the new price once confirmed.
         double newPrice = input.nextDouble();
-        currentVM.setItemPrice(index, newPrice);
-        System.out.println("Successfully updated the price of " + currentVM.getItemName(index) + " from " + oldPrice + " to " + newPrice);
+        if (oldPrice == newPrice) {
+            System.out.println("Price inputted is already the current price!");
+        }
+        else{
+            currentVM.setItemPrice(index, newPrice);
+            System.out.println("Successfully updated the price of " + currentVM.getItemName(index) + " from " + oldPrice + " to " + newPrice);
+            currentVM.updatePriceHistory(index, oldPrice);
+        }
+
     }
     /**
      * <p>Allows the user to withdraw all the funds in the vending machine (inside the machineWallet)</p>
@@ -114,12 +123,16 @@ public class Maintenance {
             displayDenominations();
             choice = input.nextInt();
 
-            if (choice > 0 && choice < 13){ // If choice is valid, prompts for the amount to add, then adds to the machine.
+            if (choice > 0 && choice < 13){ // If choice is valid, prompts for the amount to add, adds to the machine, and a history record will be made.
                 keyChoice = convertToKey(choice);
                 System.out.print("Enter number of bills/coins to add: ");
                 amountToAdd = input.nextInt();
+                int oldAmount = currentVM.getDenominationAmount(keyChoice);
+                double oldTotal = currentVM.getCurrentFunds();
                 currentVM.insertMachineFunds(keyChoice, amountToAdd);
                 System.out.println("Successfully added " + amountToAdd + " " + keyChoice + " peso denominations into the machine.");
+                currentVM.updateStockHistory(keyChoice, amountToAdd, oldAmount, oldTotal);
+
             }
             else if (choice == 0){
                 System.out.println();

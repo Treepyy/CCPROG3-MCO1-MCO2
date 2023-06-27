@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class MainMenu {
     private Scanner input = new Scanner(System.in);
@@ -12,7 +13,7 @@ public class MainMenu {
      */
     public void displayMenu() {
 
-        int choice = 0;
+        int choice = -1;
 
         // Continues loop until user inputs [3] for exiting.
         while (choice != 3) {
@@ -21,22 +22,18 @@ public class MainMenu {
             System.out.println("[2] Test a Vending Machine");
             System.out.println("[3] Exit");
             System.out.print("Pick an option: ");
-            choice = input.nextInt();
+            try{
+                choice = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+            }
             switch (choice) {
-                case 1:
-                    createVendingMachineMenu();
-                    break;
-
-                case 2:
-                    testVendingMachineMenu();
-                    break;
-
-                case 3:
-                    System.out.println("Exiting...");
-                    break;
-
-                default:
-                    System.out.println("Invalid Input.");
+                case 1 -> createVendingMachineMenu();
+                case 2 -> testVendingMachineMenu();
+                case 3 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid Input.");
             }
         }
     }
@@ -46,7 +43,7 @@ public class MainMenu {
      */
     private void createVendingMachineMenu() {
 
-        defaultItems[0] = new Item("Coke", 10, 139, 50.00);
+        defaultItems[0] = new Item("Coke", 0, 139, 50.00);
         defaultItems[1] = new Item("Sprite", 10, 146, 45.50);
         defaultItems[2] = new Item("Milk", 10, 103, 35.00);
         defaultItems[3] = new Item("Tropicana", 10, 110, 42.00);
@@ -68,7 +65,7 @@ public class MainMenu {
             System.out.print("Pick an option: ");
             choice = input.nextInt();
             switch (choice) {
-                case 1:
+                case 1 -> {
                     if (currentVM == null) { // If there is no current VendingMachine instance, proceeds to creation.
                         currentVM = new RegularVendingMachine(defaultItems);
                         System.out.println("You successfully created a new regular vending machine.");
@@ -85,19 +82,10 @@ public class MainMenu {
                             System.out.println("Operation aborted.");
                         }
                     }
-
-                    break;
-
-                case 2:
-                    System.out.println("Currently Unavailable...");
-                    break;
-
-                case 3:
-                    System.out.println("Returning to previous menu...");
-                    break;
-
-                default:
-                    System.out.println("Invalid Input.");
+                }
+                case 2 -> System.out.println("Currently Unavailable...");
+                case 3 -> System.out.println("Returning to previous menu...");
+                default -> System.out.println("Invalid Input.");
             }
         }
 
@@ -122,20 +110,16 @@ public class MainMenu {
                 choice = input.nextInt();
 
                 switch (choice) {
-                    case 1: // If the user chooses to test the vending features, the currentCustomer is instantiated.
+                    case 1 -> { // If the user chooses to test the vending features, the currentCustomer is instantiated.
                         currentCustomer = new Customer();
                         currentCustomer.purchaseItem(currentVM);
-                        break;
-                    case 2: // If the user chooses to test the maintenance features, the currentManager is instantiated.
+                    }
+                    case 2 -> { // If the user chooses to test the maintenance features, the currentManager is instantiated.
                         currentManager = new Maintenance();
                         currentManager.performMaintenance(currentVM);
-                        break;
-                    case 3:
-                        System.out.println("Returning to previous menu...");
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                        break;
+                    }
+                    case 3 -> System.out.println("Returning to previous menu...");
+                    default -> System.out.println("Invalid choice. Please try again.");
                 }
             }
         }

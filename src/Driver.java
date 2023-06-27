@@ -6,7 +6,7 @@ public class Driver {
         Questions:
 
         Should the input for money of the customer should be text input-based (typing the exact value) or through
-        denominations too (i.e. continuously looping a switch until the user has entered their desired amount of money)
+        denominations too (i.e. continuously looping a switch until the user has entered their desired amount of money)c
         or can it be either?
 
         Should the machine only dispense items one at a time or can the user choose to get multiple items at the same time?

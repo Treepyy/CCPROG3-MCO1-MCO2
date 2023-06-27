@@ -5,7 +5,7 @@ public class RegularVendingMachine {
 
     private Item[] itemSlots = new Item[8];
     private Wallet machineWallet = new Wallet();
-    private ArrayList<String> purchaseHistory = new ArrayList<String>();
+    private ArrayList<String> machineHistory = new ArrayList<String>();
     /**
      * <p>Constructs a new RegularVendingMachine object with the given parameters.</p>
      *
@@ -37,7 +37,15 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to find
      * @return the amount of the item
      */
-    public double getItemAmount(int itemIndex) { return itemSlots[itemIndex].getAmount(); }
+    public int getItemAmount(int itemIndex) { return itemSlots[itemIndex].getAmount(); }
+
+    /**
+     * <p>Returns the amount of a given denomination in the machineWallet.</p>
+     *
+     * @param key the denomination key to find the amount of
+     * @return the amount of the denomination
+     */
+    public int getDenominationAmount(double key) { return machineWallet.getDenominations().get(key); }
 
     /**
      * <p>Sets the price of an item in an item slot.</p>
@@ -133,7 +141,7 @@ public class RegularVendingMachine {
     }
 
     /**
-     * <p>Creates a summary of a user's transaction and adds it into the purchaseHistory ArrayList</p>
+     * <p>Creates a summary of a user's transaction and adds it into the machineHistory ArrayList</p>
      *
      * @param insertedCash is the amount of cash given by the user
      * @param itemIndex is the itemIndex of the item dispensed
@@ -146,7 +154,60 @@ public class RegularVendingMachine {
         String totalFunds = Double.toString(getCurrentFunds());
         
         String transaction = "User purchased " + itemName + ", given P" + givenMoney + " with change P" + givenChange +", total funds as of this purchase: " + totalFunds;
-        purchaseHistory.add(transaction);
+        machineHistory.add(transaction);
+    }
+
+    /**
+     * <p>Creates a summary of a user's addition to the item stock and adds it into the machineHistory ArrayList</p>
+     *
+     * @param itemIndex is the itemIndex of the item whose stock has been updated
+     * @param addedStock is the amount of items added
+     * @param previousStock is the amount of items that the machine had before the action
+     */
+    public void updateStockHistory(int itemIndex, int addedStock, int previousStock){
+        String itemName = itemSlots[itemIndex].getName();
+        String added = Integer.toString(addedStock);
+        String previous = Integer.toString(previousStock);
+        String newStock = Integer.toString(itemSlots[itemIndex].getAmount());
+
+        String record = "Added " + added + "x " + itemName + " to the machine. " + "Amount went from " + previous + " to " + newStock;
+        machineHistory.add(record);
+
+    }
+    /**
+     * <p>Creates a summary of a user's addition to denomination stock and adds it into the machineHistory ArrayList</p>
+     *
+     * @param key is the denomination whose stock has been updated
+     * @param addedStock is the amount added
+     * @param previousStock is the amount that the machine had before the action
+     */
+    public void updateStockHistory(double key, int addedStock, int previousStock, double previousTotal){
+        String denomination = Double.toString(key);
+        String added = Integer.toString(addedStock);
+        String previous = Integer.toString(previousStock);
+        String newStock = Integer.toString(machineWallet.getDenominations().get(key));
+        String prevTotal = Double.toString(previousTotal);
+        String newTotal = Double.toString(machineWallet.getTotal());
+
+        String record = "Added " + added + "x " + denomination + " denominations to the machine. " + "Amount went from " + previous + " to " + newStock + ", total funds went from " + prevTotal + " to " + newTotal;
+        machineHistory.add(record);
+
+    }
+
+    /**
+     * <p>Creates a summary of a user's price update and adds it into the machineHistory ArrayList</p>
+     *
+     * @param itemIndex is the itemIndex of the item whose price has been updated
+     * @param oldPrice is the old price of the item
+     */
+    public void updatePriceHistory(int itemIndex, double oldPrice){
+        String item = itemSlots[itemIndex].getName();
+        String oldPr = Double.toString(oldPrice);
+        String newPr = Double.toString(itemSlots[itemIndex].getPrice());
+
+        String record = "Updated the price of " + item + " from " + oldPr + " to " + newPr;
+        machineHistory.add(record);
+
     }
 
     /**
@@ -180,10 +241,10 @@ public class RegularVendingMachine {
     }
 
     /**
-     * <p>Displays the purchase history records of the machine.</p>
+     * <p>Displays all history records of the machine.</p>
      */
-    public void displayPurchaseHistory(){
-        for (String record : purchaseHistory){
+    public void displayMachineHistory(){
+        for (String record : machineHistory){
             System.out.println(record);
         }
     }

@@ -54,6 +54,7 @@ public class Wallet {
 
     /**
      * <p>Inserts a specific amount of a certain denomination into the Wallet.</p>
+     * <p><b>Preconditon: </b>amount is greater than 0</p>
      *
      * @param key is the denomination (bill/coin) to be added
      * @param amount is the number of the denomination(s) to be added
@@ -66,7 +67,7 @@ public class Wallet {
     /**
      * <p>Withdraws all cash in the Wallet.</p>
      * <p>Resets all denominations to 0 and displays what the user receives.</p>
-     * TODO: merge with resetWallet()?
+     *
      */
     public void withdrawAll(){
         if (getTotal() != 0.0){
@@ -156,19 +157,17 @@ public class Wallet {
     /**
      * <p>Subtracts a given Wallet's denominations into this Wallet, given a cash value.</p>
      * <p><b>Precondition:</b> the resulting denominations when this operation is performed will not have negative values</p>
-     * TODO: Update to use convertToDenominations() method
      *
      * @param cash is the double amount to subtract from the Wallet
      */
     public void subtractCash(double cash){
 
-        // loops through the entire treemap
-        for (Map.Entry<Double, Integer> entry : denominations.descendingMap().entrySet()) {
+        for (Map.Entry<Double, Integer> entry : denominations.descendingMap().entrySet()) { // Loops through the entire treemap in descending order
             double denomination = entry.getKey();
-            int count = (int) (cash / denomination);
+            int count = (int) (cash / denomination); // Calculate the count of the current denomination which can be subtracted from the cash amount
             int newCount = entry.getValue() - count;
-            denominations.put(denomination, newCount);
-            cash %= denomination;
+            denominations.put(denomination, newCount); // Updates the count of the current denomination in the denominations map
+            cash %= denomination; // Updates the cash amount by taking the modulo of the cash and the current denomination, reducing the cash by the maximum possible count of the current iteration's denomination
         }
 
     }
@@ -178,9 +177,7 @@ public class Wallet {
      *
      */
     public void resetWallet(){
-        for (double key : denominations.keySet()) {
-            denominations.put(key, 0);
-        }
+        denominations.replaceAll((k, v) -> 0);
     }
 
     /**
