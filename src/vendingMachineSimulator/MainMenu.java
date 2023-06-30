@@ -1,11 +1,33 @@
+package vendingMachineSimulator;
+
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
+/**
+ * Serves as the main hub to access the two main features of the Vending Machine simulator.
+ * @author Vance Gyan M. Robles
+ */
 public class MainMenu {
+
+    /**
+     * <p>Scanner for getting user inputs.</p>
+     */
     private Scanner input = new Scanner(System.in);
+    /**
+     * <p>The current vending machine to be tested/used.</p>
+     */
     private RegularVendingMachine currentVM;
+    /**
+     * <p>Holds the test items for RegularVendingMachine.</p>
+     */
     private Item[] defaultItems = new Item[8];
+    /**
+     * <p>Accesses the vending feature of the Vending Machine.</p>
+     */
     private Customer currentCustomer;
+    /**
+     * <p>Accesses the maintenance feature of the Vending Machine.</p>
+     */
     private Maintenance currentManager;
 
     /**
@@ -17,6 +39,7 @@ public class MainMenu {
 
         // Continues loop until user inputs [3] for exiting.
         while (choice != 3) {
+            System.out.println();
             System.out.println("Welcome to the Vending Machine Factory Simulator!");
             System.out.println("[1] Create a Vending Machine");
             System.out.println("[2] Test a Vending Machine");
@@ -28,12 +51,13 @@ public class MainMenu {
             catch (InputMismatchException ex){
                 input.reset();
                 input.next();
+                choice = -1;
             }
             switch (choice) {
                 case 1 -> createVendingMachineMenu();
                 case 2 -> testVendingMachineMenu();
                 case 3 -> System.out.println("Exiting...");
-                default -> System.out.println("Invalid Input.");
+                default -> System.out.println("\nInvalid Input.");
             }
         }
     }
@@ -43,49 +67,64 @@ public class MainMenu {
      */
     private void createVendingMachineMenu() {
 
-        defaultItems[0] = new Item("Coke", 0, 139, 50.00);
-        defaultItems[1] = new Item("Sprite", 10, 146, 45.50);
-        defaultItems[2] = new Item("Milk", 10, 103, 35.00);
-        defaultItems[3] = new Item("Tropicana", 10, 110, 42.00);
-        defaultItems[4] = new Item("Latte", 10, 80, 65.50);
-        defaultItems[5] = new Item("Oreo", 10, 160, 40.00);
-        defaultItems[6] = new Item("Banana Chips", 10, 147, 47.50);
-        defaultItems[7] = new Item("Nova", 10, 55, 32.00);
+        defaultItems[0] = new Item("Bread", 0, 139, 50.00);
+        defaultItems[1] = new Item("Ube Ice Cream", 10, 146, 45.50);
+        defaultItems[2] = new Item("Cup of Rice", 10, 103, 20.00);
+        defaultItems[3] = new Item("Udon Noodles", 10, 110, 42.00);
+        defaultItems[4] = new Item("Chasyu Pork", 10, 80, 65.50);
+        defaultItems[5] = new Item("Aji Tamago", 10, 160, 40.00);
+        defaultItems[6] = new Item("Fried Tofu", 10, 147, 47.50);
+        defaultItems[7] = new Item("Fish Cake", 10, 55, 32.00);
 
-
-        int choice = 0;
+        int choice = -1;
         int confirmation;
 
         // Continues loop until user inputs [3] for exiting.
         while (choice != 3) {
+            System.out.println();
             System.out.println("What would you like to create:");
             System.out.println("[1] Regular Vending Machine");
             System.out.println("[2] Special Vending Machine");
             System.out.println("[3] Exit");
             System.out.print("Pick an option: ");
-            choice = input.nextInt();
+            try{
+                choice = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                choice = -1;
+            }
             switch (choice) {
                 case 1 -> {
                     if (currentVM == null) { // If there is no current VendingMachine instance, proceeds to creation.
                         currentVM = new RegularVendingMachine(defaultItems);
-                        System.out.println("You successfully created a new regular vending machine.");
+                        System.out.println("\nYou successfully created a new regular vending machine.");
                     } else { // If there is already an existing VendingMachine instance, displays a confirmation message first.
                         System.out.println("Creating a new vending machine will overwrite the current one, continue? (Y/N)");
                         System.out.println("[1] Yes");
                         System.out.println("[2] No");
                         System.out.print("Pick an option: ");
-                        confirmation = input.nextInt();
+                        try{
+                            confirmation = input.nextInt();
+                        }
+                        catch (InputMismatchException ex){
+                            input.reset();
+                            input.next();
+                            confirmation = 2;
+                        }
                         if (confirmation == 1) { // If user confirms, creates a new instance which overwrites the first one.
                             currentVM = new RegularVendingMachine(defaultItems);
-                            System.out.println("You successfully created a new regular vending machine.");
+                            System.out.println("\nYou successfully created a new regular vending machine.");
                         } else { // Else, the operation is aborted and the user is returned to the previous choice.
-                            System.out.println("Operation aborted.");
+                            System.out.println("\nOperation aborted.");
                         }
                     }
                 }
-                case 2 -> System.out.println("Currently Unavailable...");
-                case 3 -> System.out.println("Returning to previous menu...");
-                default -> System.out.println("Invalid Input.");
+                case 2 -> System.out.println("\nCurrently Unavailable...");
+                case 3 -> System.out.println("\nReturning to previous menu...");
+                default -> System.out.println("\nInvalid Input.");
+
             }
         }
 
@@ -99,15 +138,23 @@ public class MainMenu {
 
         int choice = 0;
         if (currentVM == null) { // If there is no current VendingMachine instance, displays an error message.
-            System.out.println("Error: Please create a Vending Machine first!");
+            System.out.println("\nError: Please create a Vending Machine first!");
         } else {
             while (choice != 3) { // Else, continues to the testing menu.
-                System.out.println("What would you like to test:");
+                System.out.println();
+                System.out.println("What would you like to test?");
                 System.out.println("[1] Vending Features");
                 System.out.println("[2] Maintenance Features");
                 System.out.println("[3] Exit");
                 System.out.print("Pick an option: ");
-                choice = input.nextInt();
+                try{
+                    choice = input.nextInt();
+                }
+                catch (InputMismatchException ex){
+                    input.reset();
+                    input.next();
+                    choice = -1;
+                }
 
                 switch (choice) {
                     case 1 -> { // If the user chooses to test the vending features, the currentCustomer is instantiated.
@@ -118,8 +165,8 @@ public class MainMenu {
                         currentManager = new Maintenance();
                         currentManager.performMaintenance(currentVM);
                     }
-                    case 3 -> System.out.println("Returning to previous menu...");
-                    default -> System.out.println("Invalid choice. Please try again.");
+                    case 3 -> System.out.println("\nReturning to previous menu...");
+                    default -> System.out.println("\nInvalid choice. Please try again.");
                 }
             }
         }

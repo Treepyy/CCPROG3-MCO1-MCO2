@@ -1,13 +1,24 @@
+package vendingMachineSimulator;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Responsible for buying items from a Vending Machine using its own denominations.
+ * @author Vance Gyan M. Robles
+ */
 public class Customer {
-
+    /**
+     * <p>Scanner for getting user inputs.</p>
+     */
     private Scanner input = new Scanner(System.in);
     private Wallet userWallet = new Wallet();
 
     /**
      * <p>Displays the customer menu and allows the user to purchase an item from the vending machine.</p>
      * <p>Input of money to the machine is done through insertion of the different bill/coin denominations.</p>
+     *
+     * @param current the current vending machine to purchase from
      */
     public void purchaseItem(RegularVendingMachine current){
 
@@ -20,30 +31,40 @@ public class Customer {
         while (choice != 0) {
 
             currentAmount = userWallet.getTotal();
+            System.out.println();
             displayDenominations();
             System.out.println("Current Total Money Inserted: " + currentAmount); // The total money inserted will be displayed
             System.out.print("Pick an Option: ");
-            choice = input.nextInt();
+            try{
+                choice = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                choice = -1;
+            }
             if (choice > 0 && choice < 13){
                 keyChoice = convertToKey(choice);
                 userWallet.insertDenomination(keyChoice, 1); // Once user picks a denomination, one of it will be inserted into the userWallet
             }
 
             else if (choice == 0){
-                System.out.println("Transaction aborted!");
+                System.out.println("\nTransaction aborted!");
                 userWallet.withdrawAll(); // If user chooses to exit, all money inserted will be returned.
+                System.out.println();
             }
 
             else if (choice == 13){
                 if (userWallet.getTotal() == 0){
-                    System.out.println("Please insert money into the machine first!"); // Displays error when user tries to pick product without inserting money first
+                    System.out.println("\nPlease insert money into the machine first!"); // Displays error when user tries to pick product without inserting money first
                 }
                 else{
                     productChoice = productSelector(current); // Calls helper function for getting user input to select product
 
                     if (productChoice == 9){ // Exits menu and returns money if user changes their mind and aborts
-                        System.out.println("Transaction aborted!");
+                        System.out.println("\nTransaction aborted!");
                         userWallet.withdrawAll();
+                        System.out.println();
                         choice = 0;
                     }
                     else if (productChoice >= 0 && productChoice < 8){
@@ -53,6 +74,7 @@ public class Customer {
                         if (change >= 0 && current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
                             // If the machine has enough denominations to provide the change, continues.
                             // The product is dispensed from the machine, the change (in denominations) are subtracted from the machine and is given to the user.
+                            System.out.println();
                             current.dispenseItem(productChoice);
                             current.subtractFunds(change);
                             current.displayReceivedChange(change);
@@ -63,6 +85,7 @@ public class Customer {
                         }
                         else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
                             // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
+                            System.out.println();
                             System.out.println("Error: Not enough funds in the machine for change!");
                             current.subtractFunds(userWallet);
                             userWallet.withdrawAll();
@@ -70,6 +93,7 @@ public class Customer {
                         }
                         else{
                             // Else, if the change value reaches a negative number, displays an insufficient funds message
+                            System.out.println();
                             System.out.println("Insufficient Funds!");
                             current.subtractFunds(userWallet);
                             userWallet.withdrawAll();
@@ -80,15 +104,17 @@ public class Customer {
                 }
             }
             else {
-                System.out.println("Invalid input!");
+                System.out.println("\nInvalid input!");
             }
         }
     }
+
+
     /**
      * <p>Displays the available denominations to pick from. (for purchaseItem menu)</p>
      */
     private void displayDenominations(){
-        System.out.println("Welcome! Please insert your coins/bills into the machine. Press [0] to cancel and exit the transaction.");
+        System.out.println("[Welcome! Please insert your coins/bills into the machine. Press [0] to cancel and exit the transaction.]");
         System.out.println("[0] Exit");
         System.out.println("[1] 1 Centavo");
         System.out.println("[2] 5 Centavos");
@@ -105,6 +131,7 @@ public class Customer {
         System.out.println("[13] Continue to Selection");
         System.out.println();
     }
+
     /**
      * <p>Displays the available products in the vending machine and gets the user input.</p>
      *
@@ -114,15 +141,22 @@ public class Customer {
     private int productSelector(RegularVendingMachine current){
         int selection = -1;
         while (selection > 9 || selection < 0){
-
+            System.out.println();
             current.displayProducts();
             System.out.println("[8] Insert More Money");
             System.out.println("[9] Abort Transaction");
             System.out.print("Select a Product: ");
-            selection = input.nextInt();
+            try{
+                selection = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                selection = -1;
+            }
 
             if (selection > 9 || selection < 0){
-                System.out.println("Invalid input!");
+                System.out.println("\nInvalid input!");
             }
         }
         return selection;

@@ -1,6 +1,17 @@
+package vendingMachineSimulator;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Responsible for managing and maintaining the usability of Vending Machines.
+ * @author Vance Gyan M. Robles
+ */
 public class Maintenance {
+
+    /**
+     * <p>Scanner for getting user inputs.</p>
+     */
     private Scanner input = new Scanner(System.in);
 
     /**
@@ -14,9 +25,16 @@ public class Maintenance {
 
         // Continues loop until user inputs [7] for exiting.
         while (choice != 7) {
-
+            System.out.println();
             displayOptions();
-            choice = input.nextInt();
+            try{
+                choice = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                choice = -1;
+            }
 
             switch (choice) {
                 case 1 -> addItems(currentVM);
@@ -25,8 +43,8 @@ public class Maintenance {
                 case 4 -> addDenominations(currentVM);
                 case 5 -> currentVM.displayMachineHistory();
                 case 6 -> currentVM.displayInventory();
-                case 7 -> System.out.println("Returning to previous menu...");
-                default -> System.out.println("Invalid choice. Please try again.");
+                case 7 -> System.out.println("\nReturning to previous menu...");
+                default -> System.out.println("\nInvalid input!");
             }
         }
     }
@@ -40,26 +58,47 @@ public class Maintenance {
         currentVM.displayProducts();
         int index = -1; // Gets a user's integer input corresponding to the ID/index of the item to add
         while (index > 7 || index < 0){ // Continues loop until user inputs a valid index
+            System.out.println();
             System.out.print("Select the ID of the item to be restocked: ");
-            index = input.nextInt();
+            try{
+                index = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                index = -1;
+            }
             if (index > 7 || index < 0){
-                System.out.print("Error: Unknown ID, please try again.");
+                System.out.println("\nError: Invalid ID, please try again.");
             }
         }
 
         if (currentVM.getItemAmount(index) == 10){
-            System.out.println("Error: Item slot already full!"); // If the amount of the item in the slot is already at max, displays an error message.
+            System.out.println("\nError: Item slot already full!"); // If the amount of the item in the slot is already at max, displays an error message.
         }
         else{
             System.out.print("How many items to add? "); // Once a valid index has been picked, ask for input amount for items to add
-            int itemsToAdd = input.nextInt();
+            int itemsToAdd = 0;
+            try{
+                itemsToAdd = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                itemsToAdd = 0;
+            }
             if (currentVM.getItemAmount(index) + itemsToAdd > 10) {
-                System.out.println("Error: Too many items to add!"); // If the amount of items to add makes it so that the item amount exceeds the maximum, displays an error message.
+                System.out.println("\nError: Too many items to add!"); // If the amount of items to add makes it so that the item amount exceeds the maximum, displays an error message.
+            }
+            else if (itemsToAdd <= 0){
+                System.out.println("\nError: Invalid input!");
             }
             else{ // Else, if everything is valid, the additional items will be added into the machine and a history record will be made
                 int previousStock = currentVM.getItemAmount(index);
                 currentVM.addItemStock(index, itemsToAdd);
+                System.out.println();
                 System.out.println("Successfully added " + itemsToAdd + " " + currentVM.getItemName(index) + " into the machine.");
+                System.out.println();
                 currentVM.updateStockHistory(index, itemsToAdd, previousStock);
             }
         }
@@ -75,20 +114,41 @@ public class Maintenance {
         int index = -1;
 
         while (index > 7 || index < 0){ // Continues loop until user inputs a valid index
+            System.out.println();
+            currentVM.displayProducts();
             System.out.print("Select the ID of the item to set a price: ");
-            index = input.nextInt();
+            try{
+                index = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                index = -1;
+            }
             if (index > 7 || index < 0){
-                System.out.print("Error: Unknown ID, please try again.");
+                System.out.println("\nError: Invalid ID, please try again.");
             }
         }
         double oldPrice = currentVM.getItemPrice(index);
         System.out.print("What should be the new price? "); // Gets user input for the new price and sets it as the new price once confirmed.
-        double newPrice = input.nextDouble();
+        double newPrice = 0.0;
+        try{
+            newPrice = input.nextDouble();
+        }
+        catch (InputMismatchException ex){
+            input.reset();
+            input.next();
+            newPrice = 0.0;
+        }
         if (oldPrice == newPrice) {
-            System.out.println("Price inputted is already the current price!");
+            System.out.println("\nError: Price inputted is already the current price!");
+        }
+        else if (newPrice <= 0.0){
+            System.out.println("\nInvalid input!");
         }
         else{
             currentVM.setItemPrice(index, newPrice);
+            System.out.println();
             System.out.println("Successfully updated the price of " + currentVM.getItemName(index) + " from " + oldPrice + " to " + newPrice);
             currentVM.updatePriceHistory(index, oldPrice);
         }
@@ -101,10 +161,12 @@ public class Maintenance {
      */
     private void withdrawFunds(RegularVendingMachine currentVM){
         if (currentVM.getCurrentFunds() == 0){
-            System.out.println("Error: No money in the machine!"); // Displays error message when there are no funds in the machine.
+            System.out.println("\nError: No money in the machine!"); // Displays error message when there are no funds in the machine.
         }
         else{
+            System.out.println();
             System.out.println("Successfully withdrawn " + currentVM.getCurrentFunds() + " from the machine.");
+            currentVM.updateWithdrawHistory();
             currentVM.withdrawCurrentFunds();
         }
     }
@@ -116,29 +178,51 @@ public class Maintenance {
      */
     private void addDenominations(RegularVendingMachine currentVM){
 
-        int choice = -1, amountToAdd;
+        int choice = -1, amountToAdd = 0;
         double keyChoice;
         while (choice != 0){ // Continues loop until user inputs [0] to exit
-
+            System.out.println();
             displayDenominations();
-            choice = input.nextInt();
+            try{
+                choice = input.nextInt();
+            }
+            catch (InputMismatchException ex){
+                input.reset();
+                input.next();
+                choice = -1;
+            }
 
             if (choice > 0 && choice < 13){ // If choice is valid, prompts for the amount to add, adds to the machine, and a history record will be made.
                 keyChoice = convertToKey(choice);
                 System.out.print("Enter number of bills/coins to add: ");
-                amountToAdd = input.nextInt();
-                int oldAmount = currentVM.getDenominationAmount(keyChoice);
-                double oldTotal = currentVM.getCurrentFunds();
-                currentVM.insertMachineFunds(keyChoice, amountToAdd);
-                System.out.println("Successfully added " + amountToAdd + " " + keyChoice + " peso denominations into the machine.");
-                currentVM.updateStockHistory(keyChoice, amountToAdd, oldAmount, oldTotal);
+                try{
+                    amountToAdd = input.nextInt();
+                }
+                catch (InputMismatchException ex){
+                    input.reset();
+                    input.next();
+                    amountToAdd = 0;
+                }
+
+                if (amountToAdd <= 0){
+                    System.out.println("\nInvalid input!");
+                }
+                else{
+                    int oldAmount = currentVM.getDenominationAmount(keyChoice);
+                    double oldTotal = currentVM.getCurrentFunds();
+                    currentVM.insertMachineFunds(keyChoice, amountToAdd);
+                    System.out.println();
+                    System.out.println("Successfully added " + amountToAdd + " " + keyChoice + " peso denominations into the machine.");
+                    currentVM.updateStockHistory(keyChoice, amountToAdd, oldAmount, oldTotal);
+                }
+
 
             }
             else if (choice == 0){
-                System.out.println();
+                System.out.println("\nReturning to previous menu...");
             }
             else{
-                System.out.println("Invalid input!");
+                System.out.println("\nInvalid input!");
             }
         }
     }
@@ -147,7 +231,7 @@ public class Maintenance {
      * <p>Displays all the available maintenance options.</p>
      */
     private void displayOptions(){
-        System.out.println("Choose option:");
+        System.out.println("[Maintenance Features]");
         System.out.println("[1] Restock/Stock Item");
         System.out.println("[2] Set Price");
         System.out.println("[3] Collect Payment");

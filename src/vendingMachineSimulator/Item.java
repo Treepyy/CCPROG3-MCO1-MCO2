@@ -1,8 +1,26 @@
-public class Item {
+package vendingMachineSimulator;
 
-    private final String name;
+/**
+ * An item to be sold in a vending machine.
+ * @author Vance Gyan M. Robles
+ */
+
+public class Item {
+    /**
+     * <p>Name of the item.</p>
+     */
+    private String name;
+    /**
+     * <p>Amount of the item currently being held.</p>
+     */
     private int amount;
-    private final int calories;
+    /**
+     * <p>Number of calories in one serving of the item.</p>
+     */
+    private int calories;
+    /**
+     * <p>Price of the item when being sold at a vending machine.</p>
+     */
     private double price;
 
     /**

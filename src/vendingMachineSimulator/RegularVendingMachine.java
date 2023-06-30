@@ -1,11 +1,27 @@
+package vendingMachineSimulator;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-public class RegularVendingMachine {
 
+/**
+ * A regular vending machine, can hold up to 8 item slots with a max capacity of 10 each. Supports denomination management through a Wallet and machine history recording.
+ * @author Vance Gyan M. Robles
+ */
+public class RegularVendingMachine {
+    /**
+     * <p>Holds the items available for purchase.</p>
+     */
     private Item[] itemSlots = new Item[8];
+    /**
+     * <p>Wallet which holds the funds of the machine.</p>
+     */
     private Wallet machineWallet = new Wallet();
+    /**
+     * <p>ArrayList for keeping the history of machine transactions.</p>
+     */
     private ArrayList<String> machineHistory = new ArrayList<String>();
+
     /**
      * <p>Constructs a new RegularVendingMachine object with the given parameters.</p>
      *
@@ -180,6 +196,7 @@ public class RegularVendingMachine {
      * @param key is the denomination whose stock has been updated
      * @param addedStock is the amount added
      * @param previousStock is the amount that the machine had before the action
+     * @param previousTotal is the previous total funds in the machine before the action
      */
     public void updateStockHistory(double key, int addedStock, int previousStock, double previousTotal){
         String denomination = Double.toString(key);
@@ -211,16 +228,25 @@ public class RegularVendingMachine {
     }
 
     /**
+     * <p>Creates a report of a user's machine fund withdrawal (total amount withdrawn) and adds it into the machineHistory ArrayList</p>
+     */
+    public void updateWithdrawHistory(){
+        String record = "User withdrew " + machineWallet.getTotal() + " from the machine." ;
+        machineHistory.add(record);
+
+    }
+
+    /**
      * <p>Displays the inventory of the machine (products and denominations currently in the wallet)</p>
      */
     public void displayInventory(){
         int index = 0;
-        System.out.println("Index (ID), Name, Price, Amount in Stock, Calories");
+        System.out.println("\n[Product Inventory]");
         for (Item i: itemSlots){
-            System.out.println(index + " " + i.getName() + " " + i.getPrice() + " " + i.getAmount() + " " + i.getCalories());
+            System.out.println("ID: " + index + ", Name: " + i.getName() + ", Price: " + i.getPrice() + ", Amount: " + i.getAmount() + ", Calories: " + i.getCalories());
             index++;
         }
-        System.out.println();
+        System.out.println("\n[Cash Inventory]");
         for (Double i : machineWallet.getDenominations().keySet()) {
             System.out.println("Denomination: " + i + ", Amount: " + machineWallet.getDenominations().get(i));
         }
@@ -244,6 +270,7 @@ public class RegularVendingMachine {
      * <p>Displays all history records of the machine.</p>
      */
     public void displayMachineHistory(){
+        System.out.println("\n[History of Machine Transactions]");
         for (String record : machineHistory){
             System.out.println(record);
         }

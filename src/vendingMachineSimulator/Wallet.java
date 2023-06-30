@@ -1,8 +1,16 @@
+package vendingMachineSimulator;
+
 import java.util.TreeMap;
 import java.util.Map;
 
+/**
+ * Serves as the container and manager of denominations. Uses Philippine Peso denominations from 1 centavo coin to 1000 peso bill.
+ * @author Vance Gyan M. Robles
+ */
 public class Wallet {
-
+    /**
+     * <p>The treemap for holding the amount of all denomination types in the wallet. TreeMap is used to preserve order for calculating denominations needed for a given value.</p>
+     */
     private TreeMap<Double, Integer> denominations = new TreeMap<Double, Integer>();
 
     /**
@@ -54,7 +62,7 @@ public class Wallet {
 
     /**
      * <p>Inserts a specific amount of a certain denomination into the Wallet.</p>
-     * <p><b>Preconditon: </b>amount is greater than 0</p>
+     * <p><b>Preconditon: </b>amount is greater than 0, key is a valid denomination</p>
      *
      * @param key is the denomination (bill/coin) to be added
      * @param amount is the number of the denomination(s) to be added
@@ -183,7 +191,6 @@ public class Wallet {
     /**
      * <p>Displays a given denominations treemap as items received.</p>
      * <p>Sorts each denomination into either bills or coins before displaying.</p>
-     * TODO: move to RegularVendingMachine?
      *
      * @param denominations is the treemap to be displayed as items received
      */
