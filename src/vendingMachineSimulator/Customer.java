@@ -68,37 +68,44 @@ public class Customer {
                         choice = 0;
                     }
                     else if (productChoice >= 0 && productChoice < 8){
-                        // The change is calculated by getting the difference of the total funds and price of the selected item.
-                        double change = userWallet.getTotal() - current.getItemPrice(productChoice);
-                        current.addFunds(userWallet); // The denominations inside userWallet is added into the machineWallet.
-                        if (change >= 0 && current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
-                            // If the machine has enough denominations to provide the change, continues.
-                            // The product is dispensed from the machine, the change (in denominations) are subtracted from the machine and is given to the user.
-                            System.out.println();
-                            current.dispenseItem(productChoice);
-                            current.subtractFunds(change);
-                            current.displayReceivedChange(change);
-                            // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
-                            userWallet.resetWallet();
-                            current.updatePurchaseHistory(currentAmount, productChoice, change);
-                            System.out.println("Purchase Successful!");
-                        }
-                        else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
-                            // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
-                            System.out.println();
-                            System.out.println("Error: Not enough funds in the machine for change!");
-                            current.subtractFunds(userWallet);
-                            userWallet.withdrawAll();
-                            System.out.println("Inserted funds have been returned.");
+
+                        if (current.getItemAmount(productChoice) == 0){ // Checks if the item amount is greater than 0, if not then displays an error message
+                            System.out.println("\nError: Not enough items in the machine!");
                         }
                         else{
-                            // Else, if the change value reaches a negative number, displays an insufficient funds message
-                            System.out.println();
-                            System.out.println("Insufficient Funds!");
-                            current.subtractFunds(userWallet);
-                            userWallet.withdrawAll();
-                            System.out.println("Transaction aborted!");
+                            // The change is calculated by getting the difference of the total funds and price of the selected item.
+                            double change = userWallet.getTotal() - current.getItemPrice(productChoice);
+                            current.addFunds(userWallet); // The denominations inside userWallet is added into the machineWallet.
+                            if (change >= 0 && current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
+                                // If the machine has enough denominations to provide the change, continues.
+                                // The product is dispensed from the machine, the change (in denominations) are subtracted from the machine and is given to the user.
+                                System.out.println();
+                                current.dispenseItem(productChoice);
+                                current.subtractFunds(change);
+                                current.displayReceivedChange(change);
+                                // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
+                                userWallet.resetWallet();
+                                current.updatePurchaseHistory(currentAmount, productChoice, change);
+                                System.out.println("Purchase Successful!");
+                            }
+                            else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
+                                // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
+                                System.out.println();
+                                System.out.println("Error: Not enough funds in the machine for change!");
+                                current.subtractFunds(userWallet);
+                                userWallet.withdrawAll();
+                                System.out.println("Inserted funds have been returned.");
+                            }
+                            else{
+                                // Else, if the change value reaches a negative number, displays an insufficient funds message
+                                System.out.println();
+                                System.out.println("Insufficient Funds!");
+                                current.subtractFunds(userWallet);
+                                userWallet.withdrawAll();
+                                System.out.println("Transaction aborted!");
+                            }
                         }
+
                     }
                     // Choosing productChoice == [8] will return user to the denomination input loop.
                 }
@@ -143,7 +150,7 @@ public class Customer {
         while (selection > 9 || selection < 0){
             System.out.println();
             current.displayProducts();
-            System.out.println("[8] Insert More Money");
+            System.out.println("[" + "] Insert More Money");
             System.out.println("[9] Abort Transaction");
             System.out.print("Select a Product: ");
             try{

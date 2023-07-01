@@ -27,7 +27,6 @@ public class Wallet {
         denominations.put(10.00, 0);
         denominations.put(5.00, 0);
         denominations.put(1.00, 0);
-        denominations.put(0.50, 0);
         denominations.put(0.25, 0);
         denominations.put(0.05, 0);
         denominations.put(0.01, 0);
@@ -62,7 +61,7 @@ public class Wallet {
 
     /**
      * <p>Inserts a specific amount of a certain denomination into the Wallet.</p>
-     * <p><b>Preconditon: </b>amount is greater than 0, key is a valid denomination</p>
+     * <p><b>Precondition: </b>amount is greater than 0, key is a valid denomination</p>
      *
      * @param key is the denomination (bill/coin) to be added
      * @param amount is the number of the denomination(s) to be added
@@ -102,7 +101,6 @@ public class Wallet {
         converted.put(10.00, 0);
         converted.put(5.00, 0);
         converted.put(1.00, 0);
-        converted.put(0.50, 0);
         converted.put(0.25, 0);
         converted.put(0.05, 0);
         converted.put(0.01, 0);
@@ -204,7 +202,7 @@ public class Wallet {
             int count = entry.getValue();
             if (count > 0) {
                 if (entry.getKey() < 1){
-                    denomination *= 10;
+                    denomination *= 100;
                     currencyName = " Centavo ";
                     type = "Coin";
                 }

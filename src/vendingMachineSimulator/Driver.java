@@ -5,9 +5,6 @@ package vendingMachineSimulator;
  */
 public class Driver {
 
-    /*
-        TODO: demo video, test script
-     */
     public static void main(String[] args) {
 
         MainMenu menu = new MainMenu();

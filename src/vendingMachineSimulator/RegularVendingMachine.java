@@ -143,9 +143,8 @@ public class RegularVendingMachine {
      * @return true if valid (no negative values after map subtraction), false if not
      */
     public boolean hasEnoughDenominations(TreeMap<Double, Integer> change){
-        // TODO: returns true if there is enough denominations for change, false otherwise
-        // should return false if there is at least 1 negative value for a treemap obtained after subtracting each denomination
 
+        // should return false if there is at least 1 negative value for a treemap obtained after subtracting each denomination, else returns true
         for (double key : machineWallet.getDenominations().descendingMap().keySet()){
             int denominationsRemaining = machineWallet.getDenominations().get(key) - change.get(key);
             if (denominationsRemaining < 0){
@@ -231,7 +230,7 @@ public class RegularVendingMachine {
      * <p>Creates a report of a user's machine fund withdrawal (total amount withdrawn) and adds it into the machineHistory ArrayList</p>
      */
     public void updateWithdrawHistory(){
-        String record = "User withdrew " + machineWallet.getTotal() + " from the machine." ;
+        String record = "User withdrew " + machineWallet.getTotal() + " pesos from the machine." ;
         machineHistory.add(record);
 
     }
@@ -270,7 +269,8 @@ public class RegularVendingMachine {
      * <p>Displays all history records of the machine.</p>
      */
     public void displayMachineHistory(){
-        System.out.println("\n[History of Machine Transactions]");
+        if (machineHistory.size() != 0)
+            System.out.println("\n[History of Machine Transactions]");
         for (String record : machineHistory){
             System.out.println(record);
         }
@@ -292,7 +292,7 @@ public class RegularVendingMachine {
                 int count = entry.getValue();
                 if (count > 0) {
                     if (entry.getKey() < 1) {
-                        denomination *= 10;
+                        denomination *= 100;
                         currencyName = " Centavo ";
                         type = "Coin";
                     } else if (entry.getKey() >= 1 && entry.getKey() < 20) {

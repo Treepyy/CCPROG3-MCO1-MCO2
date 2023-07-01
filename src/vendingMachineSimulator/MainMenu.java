@@ -67,14 +67,14 @@ public class MainMenu {
      */
     private void createVendingMachineMenu() {
 
-        defaultItems[0] = new Item("Bread", 0, 139, 50.00);
-        defaultItems[1] = new Item("Ube Ice Cream", 10, 146, 45.50);
-        defaultItems[2] = new Item("Cup of Rice", 10, 103, 20.00);
-        defaultItems[3] = new Item("Udon Noodles", 10, 110, 42.00);
-        defaultItems[4] = new Item("Chasyu Pork", 10, 80, 65.50);
-        defaultItems[5] = new Item("Aji Tamago", 10, 160, 40.00);
-        defaultItems[6] = new Item("Fried Tofu", 10, 147, 47.50);
-        defaultItems[7] = new Item("Fish Cake", 10, 55, 32.00);
+        defaultItems[0] = new Item("Bread", 0, 207, 30.00);
+        defaultItems[1] = new Item("Ube Ice Cream", 0, 146, 45.50);
+        defaultItems[2] = new Item("Plain Rice", 0, 130, 25.00);
+        defaultItems[3] = new Item("Java Rice", 0, 136, 32.00);
+        defaultItems[4] = new Item("Soba Noodles", 0, 99, 55.50);
+        defaultItems[5] = new Item("Udon Noodles", 0, 124, 50.00);
+        defaultItems[6] = new Item("Fried Tofu", 0, 77, 27.50);
+        defaultItems[7] = new Item("Fish Cake", 0, 201, 32.00);
 
         int choice = -1;
         int confirmation;
