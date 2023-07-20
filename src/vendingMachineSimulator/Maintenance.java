@@ -109,7 +109,7 @@ public class Maintenance {
      *
      * @param currentVM is the vending machine to be used
      */
-    private void changeItemPrice(RegularVendingMachine currentVM){
+    public void changeItemPrice(RegularVendingMachine currentVM){
 
         int index = -1;
 
@@ -154,6 +154,11 @@ public class Maintenance {
         }
 
     }
+    public void changeItemPrice(RegularVendingMachine currentVM, int index, double newPrice){
+        currentVM.setItemPrice(index, newPrice);
+    }
+
+
     /**
      * <p>Allows the user to withdraw all the funds in the vending machine (inside the machineWallet)</p>
      *

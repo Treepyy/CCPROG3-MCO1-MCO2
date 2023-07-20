@@ -1,5 +1,6 @@
 package vendingMachineSimulator;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
@@ -7,7 +8,7 @@ import java.util.InputMismatchException;
  * Serves as the main hub to access the two main features of the Vending Machine simulator.
  * @author Vance Gyan M. Robles
  */
-public class MainMenu {
+public class MainModel {
 
     /**
      * <p>Scanner for getting user inputs.</p>
@@ -29,6 +30,60 @@ public class MainMenu {
      * <p>Accesses the maintenance feature of the Vending Machine.</p>
      */
     private Maintenance currentManager;
+
+    public MainModel(){
+        defaultItems[0] = new Item("Bread", 0, 207, 30.00);
+        defaultItems[1] = new Item("Ube Ice Cream", 0, 146, 45.50);
+        defaultItems[2] = new Item("Plain Rice", 0, 130, 25.00);
+        defaultItems[3] = new Item("Java Rice", 0, 136, 32.00);
+        defaultItems[4] = new Item("Soba Noodles", 0, 99, 55.50);
+        defaultItems[5] = new Item("Udon Noodles", 0, 124, 50.00);
+        defaultItems[6] = new Item("Fried Tofu", 0, 77, 27.50);
+        defaultItems[7] = new Item("Fish Cake", 0, 201, 32.00);
+    }
+
+    public void createRegularVM(){
+        currentVM = new RegularVendingMachine(defaultItems);
+    }
+
+    public void createSpecialVM(){
+
+    }
+
+    public boolean hasCreatedVM(){
+        if (currentVM != null)
+            return true;
+
+        return false;
+    }
+    public void testVending(){
+        currentCustomer = new Customer();
+        currentCustomer.purchaseItem(currentVM);
+    }
+
+    public void testMaintenance(){
+        currentManager = new Maintenance();
+        currentManager.performMaintenance(currentVM);
+    }
+
+    public ArrayList<String> getItemNameList(){
+
+        ArrayList<String> itemNames = new ArrayList<String>();
+        for (Item item : defaultItems){
+            itemNames.add(item.getName());
+        }
+
+        return itemNames;
+    }
+
+    public double getItemPrice(int index){
+        return currentVM.getItemPrice(index);
+    }
+
+    public void changeItemPrice(int index, double newPrice){
+        currentManager = new Maintenance();
+        currentManager.changeItemPrice(currentVM, index, newPrice);
+    }
 
     /**
      * <p>Displays the main menu and allows the user to input integers for navigation.</p>
@@ -66,15 +121,6 @@ public class MainMenu {
      * <p>Displays the menu for creating a VendingMachine instance.</p>
      */
     private void createVendingMachineMenu() {
-
-        defaultItems[0] = new Item("Bread", 0, 207, 30.00);
-        defaultItems[1] = new Item("Ube Ice Cream", 0, 146, 45.50);
-        defaultItems[2] = new Item("Plain Rice", 0, 130, 25.00);
-        defaultItems[3] = new Item("Java Rice", 0, 136, 32.00);
-        defaultItems[4] = new Item("Soba Noodles", 0, 99, 55.50);
-        defaultItems[5] = new Item("Udon Noodles", 0, 124, 50.00);
-        defaultItems[6] = new Item("Fried Tofu", 0, 77, 27.50);
-        defaultItems[7] = new Item("Fish Cake", 0, 201, 32.00);
 
         int choice = -1;
         int confirmation;

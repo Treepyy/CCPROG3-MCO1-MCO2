@@ -6,9 +6,11 @@ package vendingMachineSimulator;
 public class Driver {
 
     public static void main(String[] args) {
+        MainView mainView = new MainView();
+        MainModel mainModel = new MainModel();
+        MainController mainController = new MainController(mainView, mainModel);
 
-        MainMenu menu = new MainMenu();
-        menu.displayMenu();
+        mainModel.displayMenu();
     }
 
 }
