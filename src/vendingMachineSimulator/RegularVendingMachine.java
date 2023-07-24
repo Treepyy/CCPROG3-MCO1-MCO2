@@ -56,6 +56,14 @@ public class RegularVendingMachine {
     public int getItemAmount(int itemIndex) { return itemSlots[itemIndex].getAmount(); }
 
     /**
+     * <p>Returns the calories of the item in an item slot given its index.</p>
+     *
+     * @param itemIndex the index of the item to find
+     * @return the calories of the item
+     */
+    public double getItemCalories(int itemIndex) { return itemSlots[itemIndex].getCalories(); }
+
+    /**
      * <p>Returns the amount of a given denomination in the machineWallet.</p>
      *
      * @param key the denomination key to find the amount of
@@ -252,6 +260,18 @@ public class RegularVendingMachine {
         System.out.println("Current Total Funds in The Machine: " + getCurrentFunds());
     }
 
+    public ArrayList<Integer> getDenominationAmounts(){
+
+        ArrayList<Integer> denomAmounts = new ArrayList<>();
+
+        for (Double i : machineWallet.getDenominations().descendingMap().keySet()){
+            denomAmounts.add(machineWallet.getDenominations().get(i));
+        }
+
+        return denomAmounts;
+
+    }
+
     /**
      * <p>Displays the available products in the machine along with their associated information.</p>
      */
@@ -276,6 +296,9 @@ public class RegularVendingMachine {
         }
     }
 
+    public ArrayList<String> getMachineHistory(){
+        return machineHistory;
+    }
     /**
      * <p>Displays the change received by the user, distinguishes between coins and bills.</p>
      *

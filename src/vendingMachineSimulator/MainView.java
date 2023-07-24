@@ -1,5 +1,6 @@
 package vendingMachineSimulator;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -7,14 +8,18 @@ import java.util.ArrayList;
 public class MainView {
 
     private JFrame mainFrame, errorFrame;
-    private JLabel welcomelbl, feedbackLbl, errorLbl;
+    private JLabel welcomelbl, feedbackLbl, errorLbl, currentStockLbl, currentDenomAmtLbl;
     private JTextField priceTf;
     private JButton createBtn, testBtn, exitBtn, regularBtn, specialBtn, createHomeBtn, testHomeBtn, vendingBtn, maintBtn;
     private JButton restockBtn, setPriceBtn, collectBtn, replenishBtn, summaryBtn, invBtn, maintReturnBtn, optionReturnBtn, confirmBtn, changeBtn;
-    private JButton overwriteYesBtn, overwriteNoBtn, okayBtn;
-    private JTextArea employeeListTextArea;
+    private JButton overwriteYesBtn, overwriteNoBtn, okayBtn, confirmStockSelectBtn, confirmMoneySelectBtn, confirmRestockBtn;
+    private JButton displayItemsBtn, displayMoneyBtn, addAmtBtn;
+    private JTextArea historyTextArea;
     private JPanel panel, leftPanel;
-    private JComboBox itemNames;
+    private JComboBox itemNames, denominationTypes;
+    private JTable itemTable, moneyTable;
+    private DefaultTableModel itemTableModel, moneyTableModel;
+    private JScrollPane scrollPane;
 
     public MainView() {
         // Frames setup
@@ -77,7 +82,7 @@ public class MainView {
         this.collectBtn.setPreferredSize(new Dimension(220, 30));
         this.replenishBtn = new JButton("Replenish Money");
         this.replenishBtn.setPreferredSize(new Dimension(220, 30));
-        this.summaryBtn = new JButton("Display Transactions");
+        this.summaryBtn = new JButton("Machine History");
         this.summaryBtn.setPreferredSize(new Dimension(220, 30));
         this.invBtn = new JButton("Display Inventory");
         this.invBtn.setPreferredSize(new Dimension(220, 30));
@@ -102,17 +107,83 @@ public class MainView {
         this.priceTf = new JTextField();
         this.priceTf.setPreferredSize(new Dimension(220, 30));
 
+        String[] types = {"1 Centavo Coin", "5 Centavo Coin", "25 Centavo Coin", "1 Peso Coin", "5 Peso Coin", "10 Peso Coin",
+                "20 Peso Bill", "50 Peso Bill", "100 Peso Bill", "200 Peso Bill", "500 Peso Bill", "1000 Peso Bill"};
+        this.denominationTypes = new JComboBox(types);
+
+        this.confirmStockSelectBtn = new JButton("Confirm");
+        this.confirmStockSelectBtn.setPreferredSize(new Dimension(100, 30));
+        this.confirmRestockBtn = new JButton("Restock!");
+        this.confirmRestockBtn.setPreferredSize(new Dimension(100, 30));
+        this.currentStockLbl = new JLabel("");
+
+        this.confirmMoneySelectBtn = new JButton("Confirm");
+        this.confirmMoneySelectBtn.setPreferredSize(new Dimension(100, 30));
+
+        this.historyTextArea = new JTextArea();
+
         this.itemNames = new JComboBox<>();
+
+        this.itemTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        this.itemTableModel.addColumn("Item Name");
+        this.itemTableModel.addColumn("Quantity");
+        this.itemTableModel.addColumn("Price");
+        this.itemTableModel.addColumn("Calories");
+
+        this.itemTable = new JTable(itemTableModel);
+
+        this.moneyTableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        this.moneyTableModel.addColumn("P1000");
+        this.moneyTableModel.addColumn("P500");
+        this.moneyTableModel.addColumn("P200");
+        this.moneyTableModel.addColumn("P100");
+        this.moneyTableModel.addColumn("P50");
+        this.moneyTableModel.addColumn("P20");
+        this.moneyTableModel.addColumn("P10");
+        this.moneyTableModel.addColumn("P5");
+        this.moneyTableModel.addColumn("P1");
+        this.moneyTableModel.addColumn("25C");
+        this.moneyTableModel.addColumn("5C");
+        this.moneyTableModel.addColumn("1C");
+
+        this.moneyTable = new JTable(moneyTableModel);
+
+        this.scrollPane = new JScrollPane(itemTable);
+
+        this.displayItemsBtn = new JButton("Display Items");
+        this.displayItemsBtn.setPreferredSize(new Dimension(200, 30));
+        this.displayMoneyBtn = new JButton("Display Money");
+        this.displayMoneyBtn.setPreferredSize(new Dimension(200, 30));
+
+        this.currentDenomAmtLbl = new JLabel("");
+        this.addAmtBtn = new JButton("Add Amount");
 
 
     }
 
-    public void setDropDownItems(ArrayList<String> itemNameList){
+    public void setItemDropdownItems(ArrayList<String> itemNameList){
         this.itemNames = new JComboBox(itemNameList.toArray());
     }
 
-    public int getDropDownSelection(){
+    public int getItemDropDownSelection(){
         return itemNames.getSelectedIndex();
+    }
+
+    public int getDenomTypeSelection(){
+        return denominationTypes.getSelectedIndex();
+    }
+    public String getDenomSelectionText(){
+        return (String) denominationTypes.getSelectedItem();
     }
 
     public void setCreateBtnListener(ActionListener actionListener) {
@@ -152,6 +223,14 @@ public class MainView {
         this.optionReturnBtn.addActionListener(actionListener);
     }
 
+    public void setRestockBtnListener(ActionListener actionListener){
+        this.restockBtn.addActionListener(actionListener);
+    }
+
+    public void setConfirmRestockBtnListener(ActionListener actionListener){
+        this.confirmRestockBtn.addActionListener(actionListener);
+    }
+
     public void setSetPriceBtnListener(ActionListener actionListener){
         this.setPriceBtn.addActionListener(actionListener);
     }
@@ -174,13 +253,46 @@ public class MainView {
     public void setOkayBtnListener(ActionListener actionListener){
         this.okayBtn.addActionListener(actionListener);
     }
+
+    public void setCollectBtnListener(ActionListener actionListener){
+        this.collectBtn.addActionListener(actionListener);
+    }
+
+    public void setReplenishBtnListener(ActionListener actionListener){
+        this.replenishBtn.addActionListener(actionListener);
+    }
+
+    public void setConfirmMoneySelectBtnListener(ActionListener actionListener){
+        this.confirmMoneySelectBtn.addActionListener(actionListener);
+    }
+
+    public void setAddAmtBtnListener(ActionListener actionListener){
+        this.addAmtBtn.addActionListener(actionListener);
+    }
+
+    public void setSummaryBtnListener(ActionListener actionListener){
+        this.summaryBtn.addActionListener(actionListener);
+    }
+
+    public void setInvBtnListener(ActionListener actionListener){
+        this.invBtn.addActionListener(actionListener);
+    }
+
+    public void setStockDropDownListener(ActionListener actionListener){
+        this.itemNames.addActionListener(actionListener);
+    }
+
+    public void setDisplayItemsBtnListener(ActionListener actionListener){
+        this.displayItemsBtn.addActionListener(actionListener);
+    }
+
+    public void setDisplayMoneyBtn(ActionListener actionListener){
+        this.displayMoneyBtn.addActionListener(actionListener);
+    }
+
     public void displayFeedback(String feedback, Color textColor){
         this.feedbackLbl.setForeground(textColor);
         this.feedbackLbl.setText(feedback);
-    }
-
-    public void setEmployeeListLblText(String text) {
-        this.employeeListTextArea.setText(text);
     }
 
     public String getPriceTfText() {
@@ -271,8 +383,25 @@ public class MainView {
         this.mainFrame.validate();
     }
 
-    public void displayRestock(){
+    public void displayRestockSelection(){
+        this.mainFrame.getContentPane().removeAll();
+        this.mainFrame.getContentPane().repaint();
+        this.panel.removeAll();
+        this.confirmRestockBtn.setEnabled(true);
+        this.itemNames.setEnabled(true);
+        this.panel.add(new JLabel("Restock Items"));
+        this.mainFrame.add(panel);
+        this.mainFrame.add(optionReturnBtn);
+        this.mainFrame.add(new JLabel("Select a Product: "));
+        this.mainFrame.add(itemNames);
+        this.mainFrame.add(currentStockLbl);
+        this.mainFrame.add(confirmRestockBtn);
+        this.mainFrame.add(feedbackLbl);
+        this.mainFrame.validate();
+    }
 
+    public void updateCurrentStock(int currentStock){
+        this.currentStockLbl.setText("Current Stock: " + currentStock);
     }
 
     public void displayProductSelection(){
@@ -291,7 +420,7 @@ public class MainView {
         this.mainFrame.validate();
     }
     public void displaySetPrice(double oldItemPrice){
-        this.confirmBtn.setEnabled(false);
+        this.mainFrame.remove(confirmBtn);
         this.itemNames.setEnabled(false);
         this.feedbackLbl.setText("");
         this.mainFrame.add(new JLabel("Old Price: " + oldItemPrice));
@@ -306,11 +435,107 @@ public class MainView {
     }
 
     public void displayReplenish(){
+        // display selection of coins/bills, to be converted to image format
+
+        this.mainFrame.getContentPane().removeAll();
+        this.mainFrame.getContentPane().repaint();
+        this.panel.removeAll();
+        this.denominationTypes.setEnabled(true);
+        this.confirmBtn.setEnabled(true);
+        this.itemNames.setEnabled(true);
+        this.panel.add(new JLabel("Replenish Machine Funds"));
+        this.mainFrame.add(panel);
+        this.mainFrame.add(optionReturnBtn);
+        this.mainFrame.add(new JLabel("What to Insert? "));
+        this.mainFrame.add(denominationTypes);
+        this.mainFrame.add(confirmMoneySelectBtn);
+        this.mainFrame.add(feedbackLbl);
+        this.mainFrame.validate();
 
     }
 
-    public void displayInventory(){
+    public void updateCurrentDenomAmount(int currentAmt){
+        this.currentDenomAmtLbl.setText("Current Amount: " + currentAmt);
+    }
 
+    public void displayConfirmReplenish(){
+        this.mainFrame.remove(confirmMoneySelectBtn);
+        this.denominationTypes.setEnabled(false);
+        this.feedbackLbl.setText("");
+        this.mainFrame.add(currentDenomAmtLbl);
+        this.mainFrame.remove(priceTf);
+        this.priceTf.setText("");
+        this.mainFrame.add(new JLabel("Input number of bills/coins to add: "));
+        this.mainFrame.add(priceTf);
+        this.mainFrame.add(addAmtBtn);
+        this.mainFrame.add(feedbackLbl);
+        this.mainFrame.validate();
+    }
+
+    public void displayHistory(String historyContent){
+        this.mainFrame.getContentPane().removeAll();
+        this.mainFrame.getContentPane().repaint();
+        this.panel.removeAll();
+        this.panel.add(new JLabel("Current Machine History"));
+        this.mainFrame.add(panel);
+        this.historyTextArea.setText(historyContent);
+        this.mainFrame.add(historyTextArea);
+        this.mainFrame.add(optionReturnBtn);
+        this.mainFrame.validate();
+    }
+
+    public void displayItemInventory(){
+        // display inventory in table format, add button for toggling between item and money inventory
+
+        this.mainFrame.getContentPane().removeAll();
+        this.mainFrame.getContentPane().repaint();
+        this.panel.removeAll();
+        this.panel.add(new JLabel("Inventory"));
+        this.mainFrame.add(panel);
+        this.mainFrame.add(displayItemsBtn);
+        this.mainFrame.add(displayMoneyBtn);
+        this.mainFrame.add(scrollPane);
+        this.mainFrame.add(moneyTable, BorderLayout.CENTER);
+        this.mainFrame.add(itemTable, BorderLayout.CENTER);
+        this.scrollPane.setViewportView(itemTable);
+        this.scrollPane.setVisible(true);
+        this.itemTable.setVisible(true);
+        this.moneyTable.setVisible(false);
+        this.mainFrame.add(optionReturnBtn);
+        this.mainFrame.validate();
+    }
+
+    public void addItemInformation(String itemName, String quantity, String price, String calories) {
+        // Add a new row to the table with the given information
+        this.itemTableModel.addRow(new Object[]{itemName, quantity, price, calories});
+    }
+
+    public void displayMoneyInventory(){
+        this.mainFrame.getContentPane().removeAll();
+        this.mainFrame.getContentPane().repaint();
+        this.panel.removeAll();
+        this.panel.add(new JLabel("Inventory"));
+        this.mainFrame.add(panel);
+        this.mainFrame.add(displayItemsBtn);
+        this.mainFrame.add(displayMoneyBtn);
+        this.mainFrame.add(scrollPane);
+        this.mainFrame.add(itemTable, BorderLayout.CENTER);
+        this.mainFrame.add(moneyTable, BorderLayout.CENTER);
+        this.scrollPane.setViewportView(moneyTable);
+        this.scrollPane.setVisible(true);
+        this.itemTable.setVisible(false);
+        this.moneyTable.setVisible(true);
+        this.mainFrame.add(optionReturnBtn);
+        this.mainFrame.validate();
+    }
+
+    public void addMoneyInformation(ArrayList<Integer> amountInformation){
+        this.moneyTableModel.addRow(amountInformation.toArray());
+    }
+
+    public void clearTables(){
+        this.itemTableModel.setRowCount(0);
+        this.moneyTableModel.setRowCount(0);
     }
 
 }

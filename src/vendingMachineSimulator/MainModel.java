@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
+// TODO: Convert item amount to instantiation (not set number), implement SpecialVendingMachine and SpecialItem, ~~finish addDemon~~,
+
 /**
  * Serves as the main hub to access the two main features of the Vending Machine simulator.
  * @author Vance Gyan M. Robles
@@ -29,7 +31,7 @@ public class MainModel {
     /**
      * <p>Accesses the maintenance feature of the Vending Machine.</p>
      */
-    private Maintenance currentManager;
+    private Maintenance currentManager = new Maintenance();
 
     public MainModel(){
         defaultItems[0] = new Item("Bread", 0, 207, 30.00);
@@ -76,13 +78,57 @@ public class MainModel {
         return itemNames;
     }
 
+    public ArrayList<String> getMachineHistory(){
+        return currentVM.getMachineHistory();
+    }
+
     public double getItemPrice(int index){
         return currentVM.getItemPrice(index);
     }
 
+    public int getItemStock(int index){
+        return currentVM.getItemAmount(index);
+    }
+
     public void changeItemPrice(int index, double newPrice){
-        currentManager = new Maintenance();
         currentManager.changeItemPrice(currentVM, index, newPrice);
+    }
+
+    public boolean addItemStock(int index){
+        if ((currentVM.getItemAmount(index) + 1) > 10){
+            return false;
+        }
+        else{
+            int previousStock = currentVM.getItemAmount(index);
+            currentVM.addItemStock(index, 1);
+            currentVM.updateStockHistory(index, 1, previousStock);
+            return true;
+        }
+    }
+
+    public double withdrawAll(){
+        double withdrawnFunds = currentManager.withdrawFunds(currentVM);
+        return withdrawnFunds;
+    }
+
+    public ArrayList<String> getItemInformation(){
+        ArrayList<String> itemInformation = new ArrayList<String>();
+        for (int i = 0; i < defaultItems.length; i++)
+            itemInformation.add(currentVM.getItemName(i) + "," + currentVM.getItemAmount(i) + "," + currentVM.getItemPrice(i) + "," + currentVM.getItemCalories(i));
+
+        return itemInformation;
+    }
+
+    public ArrayList<Integer> getMoneyInformation(){
+        return currentVM.getDenominationAmounts();
+    }
+
+    public int getDenomAmount(int denomIndex){
+        return currentManager.getDenomAmt(currentVM, denomIndex);
+    }
+
+    public void addDenom(int denomIndex, int amountToAdd){
+        currentManager.addDenominations(currentVM, denomIndex, amountToAdd);
     }
 
     /**
