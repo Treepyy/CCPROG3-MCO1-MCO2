@@ -9,8 +9,6 @@ public class Driver {
         MainView mainView = new MainView();
         MainModel mainModel = new MainModel();
         MainController mainController = new MainController(mainView, mainModel);
-
-        mainModel.displayMenu();
     }
 
 }

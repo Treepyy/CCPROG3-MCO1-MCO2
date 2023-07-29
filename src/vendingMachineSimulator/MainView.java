@@ -395,12 +395,14 @@ public class MainView {
         this.mainFrame.add(new JLabel("Select a Product: "));
         this.mainFrame.add(itemNames);
         this.mainFrame.add(currentStockLbl);
+        this.currentStockLbl.setVisible(false);
         this.mainFrame.add(confirmRestockBtn);
         this.mainFrame.add(feedbackLbl);
         this.mainFrame.validate();
     }
 
     public void updateCurrentStock(int currentStock){
+        this.currentStockLbl.setVisible(true);
         this.currentStockLbl.setText("Current Stock: " + currentStock);
     }
 

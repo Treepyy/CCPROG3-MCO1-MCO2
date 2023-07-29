@@ -9,20 +9,18 @@ public class Item {
     /**
      * <p>Name of the item.</p>
      */
-    private String name;
-    /**
-     * <p>Amount of the item currently being held.</p>
-     */
-    // private int amount;
+    protected String name;
 
     /**
      * <p>Number of calories in one serving of the item.</p>
      */
-    private int calories;
+    protected int calories;
     /**
      * <p>Price of the item when being sold at a vending machine.</p>
      */
-    private double price;
+    protected double price;
+
+    protected boolean isPurchasable;
 
     /**
      * <p>Constructs a new Item object with the given parameters.</p>
@@ -31,10 +29,11 @@ public class Item {
      * @param calories the number of calories in the item
      * @param price    the price of the item
      */
-    public Item(String name, int calories, double price) {
+    public Item(String name, int calories, double price, boolean isPurchasable) {
         this.name = name;
         this.calories = calories;
         this.price = price;
+        this.isPurchasable = isPurchasable;
     }
 
     /**
@@ -64,19 +63,7 @@ public class Item {
         return name;
     }
 
-    /**
-     * <p>Returns the amount of the item.</p>
-     *
-     * @return the amount of the item
-     */
-    // public int getAmount() {return amount;}
-
-    /**
-     * <p>Sets the amount of the item.</p>
-     *
-     * @param amount the new amount of the item
-     */
-    // public void setAmount(int amount) {this.amount = amount;}
+    public boolean isPurchasable() { return isPurchasable; }
 
     /**
      * <p>Returns the number of calories in the item.</p>

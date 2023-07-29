@@ -32,7 +32,6 @@ public class Customer {
 
             currentAmount = userWallet.getTotal();
             System.out.println();
-            displayDenominations();
             System.out.println("Current Total Money Inserted: " + currentAmount); // The total money inserted will be displayed
             System.out.print("Pick an Option: ");
             try{
@@ -59,7 +58,7 @@ public class Customer {
                     System.out.println("\nPlease insert money into the machine first!"); // Displays error when user tries to pick product without inserting money first
                 }
                 else{
-                    productChoice = productSelector(current); // Calls helper function for getting user input to select product
+                    productChoice = 0;
 
                     if (productChoice == 9){ // Exits menu and returns money if user changes their mind and aborts
                         System.out.println("\nTransaction aborted!");
@@ -82,7 +81,6 @@ public class Customer {
                                 System.out.println();
                                 current.dispenseItem(productChoice);
                                 current.subtractFunds(change);
-                                current.displayReceivedChange(change);
                                 // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
                                 userWallet.resetWallet();
                                 current.updatePurchaseHistory(currentAmount, productChoice, change);
@@ -116,58 +114,6 @@ public class Customer {
         }
     }
 
-
-    /**
-     * <p>Displays the available denominations to pick from. (for purchaseItem menu)</p>
-     */
-    private void displayDenominations(){
-        System.out.println("[Welcome! Please insert your coins/bills into the machine. Press [0] to cancel and exit the transaction.]");
-        System.out.println("[0] Exit");
-        System.out.println("[1] 1 Centavo");
-        System.out.println("[2] 5 Centavos");
-        System.out.println("[3] 25 Centavos");
-        System.out.println("[4] 1 Peso");
-        System.out.println("[5] 5 Pesos");
-        System.out.println("[6] 10 Pesos");
-        System.out.println("[7] 20 Pesos");
-        System.out.println("[8] 50 Pesos");
-        System.out.println("[9] 100 Pesos");
-        System.out.println("[10] 200 Pesos");
-        System.out.println("[11] 500 Pesos");
-        System.out.println("[12] 1000 Pesos");
-        System.out.println("[13] Continue to Selection");
-        System.out.println();
-    }
-
-    /**
-     * <p>Displays the available products in the vending machine and gets the user input.</p>
-     *
-     * @param current is the vending machine to select a product from
-     * @return the integer corresponding to the user's selection
-     */
-    private int productSelector(RegularVendingMachine current){
-        int selection = -1;
-        while (selection > 9 || selection < 0){
-            System.out.println();
-            current.displayProducts();
-            System.out.println("[" + "] Insert More Money");
-            System.out.println("[9] Abort Transaction");
-            System.out.print("Select a Product: ");
-            try{
-                selection = input.nextInt();
-            }
-            catch (InputMismatchException ex){
-                input.reset();
-                input.next();
-                selection = -1;
-            }
-
-            if (selection > 9 || selection < 0){
-                System.out.println("\nInvalid input!");
-            }
-        }
-        return selection;
-    }
 
     /**
      * <p>Converts the user's choice input to a corresponding key value.</p>

@@ -11,29 +11,21 @@ import java.util.LinkedList;
  * @author Vance Gyan M. Robles
  */
 public class RegularVendingMachine {
-
-    /*
-    * WIP: Conversion of item slots to instantiated items.
-    *
-    *
-    *
-    */
-    private final int maxItemSlots = 8;
-    private final int maxItemSlotCapacity = 10;
-    private ArrayList<Item> itemSamples = new ArrayList<>();
+    private final int maxItemSlots = 40;
+    protected ArrayList<Item> itemSamples = new ArrayList<>();
     /**
      * <p>Holds the items available for purchase.</p>
      */
-    private Deque<Item>[] itemSlots = new LinkedList[maxItemSlots];
+    protected Deque<Item>[] itemSlots = new LinkedList[maxItemSlots];
     // private Item[][] itemSlots = new Item[maxItemSlots][maxItemSlotCapacity];
     /**
      * <p>Wallet which holds the funds of the machine.</p>
      */
-    private Wallet machineWallet = new Wallet();
+    protected Wallet machineWallet = new Wallet();
     /**
      * <p>ArrayList for keeping the history of machine transactions.</p>
      */
-    private ArrayList<String> machineHistory = new ArrayList<String>();
+    protected ArrayList<String> machineHistory = new ArrayList<String>();
 
     /**
      * <p>Constructs a new RegularVendingMachine object with the given parameters.</p>
@@ -98,10 +90,12 @@ public class RegularVendingMachine {
      */
     public void setItemPrice(int itemIndex, double newPrice){
 
+        // sets the price of the item within the samples to the new price so that new items created that are of this type will have the updated price
         itemSamples.get(itemIndex).setPrice(newPrice);
 
+        // then, sets the price of all already created items to the new price
         for (Item item : itemSlots[itemIndex]){
-            item.setPrice(newPrice);
+            System.out.println(item.getPrice());
         }
     }
 
@@ -151,14 +145,14 @@ public class RegularVendingMachine {
      *
      * @param itemIndex the index of the item to be dispensed
      */
-    public void dispenseItem(int itemIndex){
+    public String dispenseItem(int itemIndex){
         itemSlots[itemIndex].pop();
-        System.out.println("Successfully dispensed!");
-        System.out.println("Received: 1x " + itemSamples.get(itemIndex).getName());
+        return "Successfully dispensed!\nReceived: 1x " + itemSamples.get(itemIndex).getName();
+
     }
 
     /**
-     * <p>Adds a given amount of items into the item slot (increments its amount value by a given value)</p>
+     * <p>Adds a given amount of items into the item slot</p>
      *
      * @param itemIndex the index of the item to be restocked
      * @param addedAmount the amount of items to be added
@@ -271,20 +265,6 @@ public class RegularVendingMachine {
     /**
      * <p>Displays the inventory of the machine (products and denominations currently in the wallet)</p>
      */
-    public void displayInventory(){
-        int index = 0;
-        System.out.println("\n[Product Inventory]");
-        for (Item i: itemSamples){
-            System.out.println("ID: " + index + ", Name: " + i.getName() + ", Price: " + i.getPrice() + ", Amount: " + getItemAmount(index) + ", Calories: " + i.getCalories());
-            index++;
-        }
-        System.out.println("\n[Cash Inventory]");
-        for (Double i : machineWallet.getDenominations().keySet()) {
-            System.out.println("Denomination: " + i + ", Amount: " + machineWallet.getDenominations().get(i));
-        }
-        System.out.println("Current Total Funds in The Machine: " + getCurrentFunds());
-    }
-
     public ArrayList<Integer> getDenominationAmounts(){
 
         ArrayList<Integer> denomAmounts = new ArrayList<>();
@@ -297,44 +277,25 @@ public class RegularVendingMachine {
 
     }
 
-    /**
-     * <p>Displays the available products in the machine along with their associated information.</p>
-     */
-    public void displayProducts(){
-        int index = 0;
-
-        for (Item product: itemSamples){
-            System.out.println("[" + index + "]" + " " + product.getName() + ", Price: P" + product.getPrice() + ", Amount in Stock: " + getItemAmount(index) + ", Calories: " + product.getCalories());
-            index++;
-        }
-
-    }
-
-    /**
-     * <p>Displays all history records of the machine.</p>
-     */
-    public void displayMachineHistory(){
-        if (machineHistory.size() != 0)
-            System.out.println("\n[History of Machine Transactions]");
-        for (String record : machineHistory){
-            System.out.println(record);
-        }
-    }
-
     public ArrayList<String> getMachineHistory(){
         return machineHistory;
     }
+
     /**
      * <p>Displays the change received by the user, distinguishes between coins and bills.</p>
      *
      * @param changeVal is the double value of the change to be given
+     * @return a String output summarizing the received coins/bills
      */
-    public void displayReceivedChange(double changeVal){
+    public String displayReceivedChangeMessage(double changeVal){
+
+        String output = "";
 
         TreeMap<Double, Integer> change = machineWallet.convertToDenominations(changeVal);
         String currencyName, type;
+
         if (changeVal > 0) {
-            System.out.println("Your Change:");
+            output += "Your Change:\n";
             for (Map.Entry<Double, Integer> entry : change.entrySet()) {
                 double denomination = entry.getKey();
                 int count = entry.getValue();
@@ -350,10 +311,12 @@ public class RegularVendingMachine {
                         currencyName = " Peso ";
                         type = "Bill";
                     }
-                    System.out.println(count + "x " + denomination + currencyName + type);
+                    output += count + "x " + denomination + currencyName + type + "\n";
                 }
             }
         }
+
+        return output;
     }
 
 }
