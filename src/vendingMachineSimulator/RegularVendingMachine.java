@@ -3,16 +3,29 @@ package vendingMachineSimulator;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * A regular vending machine, can hold up to 8 item slots with a max capacity of 10 each. Supports denomination management through a Wallet and machine history recording.
  * @author Vance Gyan M. Robles
  */
 public class RegularVendingMachine {
+
+    /*
+    * WIP: Conversion of item slots to instantiated items.
+    *
+    *
+    *
+    */
+    private final int maxItemSlots = 8;
+    private final int maxItemSlotCapacity = 10;
+    private ArrayList<Item> itemSamples = new ArrayList<>();
     /**
      * <p>Holds the items available for purchase.</p>
      */
-    private Item[] itemSlots = new Item[8];
+    private Deque<Item>[] itemSlots = new LinkedList[maxItemSlots];
+    // private Item[][] itemSlots = new Item[maxItemSlots][maxItemSlotCapacity];
     /**
      * <p>Wallet which holds the funds of the machine.</p>
      */
@@ -25,10 +38,14 @@ public class RegularVendingMachine {
     /**
      * <p>Constructs a new RegularVendingMachine object with the given parameters.</p>
      *
-     * @param itemSlots the Item array which contains the products of the vending machine
+     * @param itemSamples the Item array which contains a sample of the products of the vending machine, the information of each item will be used for the stock
      */
-    public RegularVendingMachine(Item[] itemSlots){
-        this.itemSlots = itemSlots;
+    public RegularVendingMachine(ArrayList<Item> itemSamples){
+        // initializes the stacks
+        for (int i = 0; i < maxItemSlots; i++) {
+            itemSlots[i] = new LinkedList<>();
+        }
+        this.itemSamples = itemSamples;
     }
 
     /**
@@ -37,7 +54,7 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to find
      * @return the price of the item
      */
-    public double getItemPrice(int itemIndex){ return itemSlots[itemIndex].getPrice(); }
+    public double getItemPrice(int itemIndex){ return itemSamples.get(itemIndex).getPrice(); }
 
     /**
      * <p>Returns the name of the item in an item slot given its index.</p>
@@ -45,7 +62,7 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to find
      * @return the name of the item
      */
-    public String getItemName(int itemIndex) { return itemSlots[itemIndex].getName(); }
+    public String getItemName(int itemIndex) { return itemSamples.get(itemIndex).getName(); }
 
     /**
      * <p>Returns the amount value of the item in an item slot given its index.</p>
@@ -53,7 +70,9 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to find
      * @return the amount of the item
      */
-    public int getItemAmount(int itemIndex) { return itemSlots[itemIndex].getAmount(); }
+    public int getItemAmount(int itemIndex) {
+        return itemSlots[itemIndex].size();
+    }
 
     /**
      * <p>Returns the calories of the item in an item slot given its index.</p>
@@ -61,7 +80,7 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to find
      * @return the calories of the item
      */
-    public double getItemCalories(int itemIndex) { return itemSlots[itemIndex].getCalories(); }
+    public double getItemCalories(int itemIndex) { return itemSamples.get(itemIndex).getCalories(); }
 
     /**
      * <p>Returns the amount of a given denomination in the machineWallet.</p>
@@ -77,7 +96,14 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to be modified
      * @param newPrice the new price of the item
      */
-    public void setItemPrice(int itemIndex, double newPrice){ itemSlots[itemIndex].setPrice(newPrice); }
+    public void setItemPrice(int itemIndex, double newPrice){
+
+        itemSamples.get(itemIndex).setPrice(newPrice);
+
+        for (Item item : itemSlots[itemIndex]){
+            item.setPrice(newPrice);
+        }
+    }
 
     /**
      * <p>Returns the total amount of the denominations in the machineWallet</p>
@@ -126,10 +152,9 @@ public class RegularVendingMachine {
      * @param itemIndex the index of the item to be dispensed
      */
     public void dispenseItem(int itemIndex){
-        int newAmount = itemSlots[itemIndex].getAmount() - 1;
+        itemSlots[itemIndex].pop();
         System.out.println("Successfully dispensed!");
-        System.out.println("Received: 1x " + itemSlots[itemIndex].getName());
-        itemSlots[itemIndex].setAmount(newAmount);
+        System.out.println("Received: 1x " + itemSamples.get(itemIndex).getName());
     }
 
     /**
@@ -139,9 +164,9 @@ public class RegularVendingMachine {
      * @param addedAmount the amount of items to be added
      */
     public void addItemStock(int itemIndex, int addedAmount){
-        int newAmount = itemSlots[itemIndex].getAmount() + addedAmount;
-
-        itemSlots[itemIndex].setAmount(newAmount);
+        for (int i = 0; i < addedAmount; i++){
+            itemSlots[itemIndex].push(itemSamples.get(itemIndex));
+        }
     }
 
     /**
@@ -171,7 +196,7 @@ public class RegularVendingMachine {
      * @param change is the change received by the user
      */
     public void updatePurchaseHistory(double insertedCash, int itemIndex, double change){
-        String itemName = itemSlots[itemIndex].getName();
+        String itemName = itemSamples.get(itemIndex).getName();
         String givenMoney = Double.toString(insertedCash);
         String givenChange = Double.toString(change);
         String totalFunds = Double.toString(getCurrentFunds());
@@ -188,10 +213,10 @@ public class RegularVendingMachine {
      * @param previousStock is the amount of items that the machine had before the action
      */
     public void updateStockHistory(int itemIndex, int addedStock, int previousStock){
-        String itemName = itemSlots[itemIndex].getName();
+        String itemName = itemSamples.get(itemIndex).getName();
         String added = Integer.toString(addedStock);
         String previous = Integer.toString(previousStock);
-        String newStock = Integer.toString(itemSlots[itemIndex].getAmount());
+        String newStock = Integer.toString(getItemAmount(itemIndex));
 
         String record = "Added " + added + "x " + itemName + " to the machine. " + "Amount went from " + previous + " to " + newStock;
         machineHistory.add(record);
@@ -225,9 +250,9 @@ public class RegularVendingMachine {
      * @param oldPrice is the old price of the item
      */
     public void updatePriceHistory(int itemIndex, double oldPrice){
-        String item = itemSlots[itemIndex].getName();
+        String item = itemSamples.get(itemIndex).getName();
         String oldPr = Double.toString(oldPrice);
-        String newPr = Double.toString(itemSlots[itemIndex].getPrice());
+        String newPr = Double.toString(itemSamples.get(itemIndex).getPrice());
 
         String record = "Updated the price of " + item + " from " + oldPr + " to " + newPr;
         machineHistory.add(record);
@@ -249,8 +274,8 @@ public class RegularVendingMachine {
     public void displayInventory(){
         int index = 0;
         System.out.println("\n[Product Inventory]");
-        for (Item i: itemSlots){
-            System.out.println("ID: " + index + ", Name: " + i.getName() + ", Price: " + i.getPrice() + ", Amount: " + i.getAmount() + ", Calories: " + i.getCalories());
+        for (Item i: itemSamples){
+            System.out.println("ID: " + index + ", Name: " + i.getName() + ", Price: " + i.getPrice() + ", Amount: " + getItemAmount(index) + ", Calories: " + i.getCalories());
             index++;
         }
         System.out.println("\n[Cash Inventory]");
@@ -278,8 +303,8 @@ public class RegularVendingMachine {
     public void displayProducts(){
         int index = 0;
 
-        for (Item product: itemSlots){
-            System.out.println("[" + index + "]" + " " + product.getName() + ", Price: P" + product.getPrice() + ", Amount in Stock: " + product.getAmount() + ", Calories: " + product.getCalories());
+        for (Item product: itemSamples){
+            System.out.println("[" + index + "]" + " " + product.getName() + ", Price: P" + product.getPrice() + ", Amount in Stock: " + getItemAmount(index) + ", Calories: " + product.getCalories());
             index++;
         }
 

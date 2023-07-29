@@ -13,7 +13,8 @@ public class Item {
     /**
      * <p>Amount of the item currently being held.</p>
      */
-    private int amount;
+    // private int amount;
+
     /**
      * <p>Number of calories in one serving of the item.</p>
      */
@@ -27,13 +28,11 @@ public class Item {
      * <p>Constructs a new Item object with the given parameters.</p>
      *
      * @param name     the name of the item
-     * @param amount   the amount of the item
      * @param calories the number of calories in the item
      * @param price    the price of the item
      */
-    public Item(String name, int amount, int calories, double price) {
+    public Item(String name, int calories, double price) {
         this.name = name;
-        this.amount = amount;
         this.calories = calories;
         this.price = price;
     }
@@ -70,18 +69,14 @@ public class Item {
      *
      * @return the amount of the item
      */
-    public int getAmount() {
-        return amount;
-    }
+    // public int getAmount() {return amount;}
 
     /**
      * <p>Sets the amount of the item.</p>
      *
      * @param amount the new amount of the item
      */
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+    // public void setAmount(int amount) {this.amount = amount;}
 
     /**
      * <p>Returns the number of calories in the item.</p>

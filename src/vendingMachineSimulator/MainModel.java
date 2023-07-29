@@ -24,6 +24,7 @@ public class MainModel {
      * <p>Holds the test items for RegularVendingMachine.</p>
      */
     private Item[] defaultItems = new Item[8];
+    private ArrayList<Item> itemSamples = new ArrayList<Item>();
     /**
      * <p>Accesses the vending feature of the Vending Machine.</p>
      */
@@ -34,18 +35,18 @@ public class MainModel {
     private Maintenance currentManager = new Maintenance();
 
     public MainModel(){
-        defaultItems[0] = new Item("Bread", 0, 207, 30.00);
-        defaultItems[1] = new Item("Ube Ice Cream", 0, 146, 45.50);
-        defaultItems[2] = new Item("Plain Rice", 0, 130, 25.00);
-        defaultItems[3] = new Item("Java Rice", 0, 136, 32.00);
-        defaultItems[4] = new Item("Soba Noodles", 0, 99, 55.50);
-        defaultItems[5] = new Item("Udon Noodles", 0, 124, 50.00);
-        defaultItems[6] = new Item("Fried Tofu", 0, 77, 27.50);
-        defaultItems[7] = new Item("Fish Cake", 0, 201, 32.00);
+        itemSamples.add(new Item("Bread",207, 30.00));
+        itemSamples.add(new Item("Ube Ice Cream",146, 45.50));
+        itemSamples.add(new Item("Plain Rice", 130, 25.00));
+        itemSamples.add(new Item("Java Rice", 136, 32.00));
+        itemSamples.add(new Item("Soba Noodles", 99, 55.50));
+        itemSamples.add(new Item("Udon Noodles",124, 50.00));
+        itemSamples.add(new Item("Fried Tofu",77, 27.50));
+        itemSamples.add(new Item("Fish Cake", 201, 32.00));
     }
 
     public void createRegularVM(){
-        currentVM = new RegularVendingMachine(defaultItems);
+        currentVM = new RegularVendingMachine(itemSamples);
     }
 
     public void createSpecialVM(){
@@ -71,7 +72,7 @@ public class MainModel {
     public ArrayList<String> getItemNameList(){
 
         ArrayList<String> itemNames = new ArrayList<String>();
-        for (Item item : defaultItems){
+        for (Item item : itemSamples){
             itemNames.add(item.getName());
         }
 
@@ -113,7 +114,7 @@ public class MainModel {
 
     public ArrayList<String> getItemInformation(){
         ArrayList<String> itemInformation = new ArrayList<String>();
-        for (int i = 0; i < defaultItems.length; i++)
+        for (int i = 0; i < itemSamples.size(); i++)
             itemInformation.add(currentVM.getItemName(i) + "," + currentVM.getItemAmount(i) + "," + currentVM.getItemPrice(i) + "," + currentVM.getItemCalories(i));
 
         return itemInformation;
@@ -190,7 +191,7 @@ public class MainModel {
             switch (choice) {
                 case 1 -> {
                     if (currentVM == null) { // If there is no current VendingMachine instance, proceeds to creation.
-                        currentVM = new RegularVendingMachine(defaultItems);
+                        currentVM = new RegularVendingMachine(itemSamples);
                         System.out.println("\nYou successfully created a new regular vending machine.");
                     } else { // If there is already an existing VendingMachine instance, displays a confirmation message first.
                         System.out.println("Creating a new vending machine will overwrite the current one, continue? (Y/N)");
@@ -206,7 +207,7 @@ public class MainModel {
                             confirmation = 2;
                         }
                         if (confirmation == 1) { // If user confirms, creates a new instance which overwrites the first one.
-                            currentVM = new RegularVendingMachine(defaultItems);
+                            currentVM = new RegularVendingMachine(itemSamples);
                             System.out.println("\nYou successfully created a new regular vending machine.");
                         } else { // Else, the operation is aborted and the user is returned to the previous choice.
                             System.out.println("\nOperation aborted.");

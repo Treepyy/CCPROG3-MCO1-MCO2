@@ -1,5 +1,15 @@
 package vendingMachineSimulator;
 
-public class SpecialVendingMachine /* extends VendingMachine(?) or extends RegularVendingMachine*/ {
-    // hahah
+import java.util.ArrayList;
+
+public class SpecialVendingMachine extends RegularVendingMachine {
+
+    public SpecialVendingMachine(ArrayList<Item> itemSamples) {
+        super(itemSamples);
+    }
+
+    public void dispenseSpecialItem(Item baseItem, ArrayList<Item> addonItems){
+
+    }
+
 }
