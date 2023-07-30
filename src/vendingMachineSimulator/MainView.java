@@ -288,8 +288,12 @@ public class MainView {
         this.displayItemsBtn.addActionListener(actionListener);
     }
 
-    public void setDisplayMoneyBtn(ActionListener actionListener){
+    public void setDisplayMoneyBtnListener(ActionListener actionListener){
         this.displayMoneyBtn.addActionListener(actionListener);
+    }
+
+    public void setVendingBtnListener(ActionListener actionListener){
+        this.vendingBtn.addActionListener(actionListener);
     }
 
     public void displayFeedback(String feedback, Color textColor){

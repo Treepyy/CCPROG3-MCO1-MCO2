@@ -44,13 +44,13 @@ public class MainModel {
         itemSamples.add(new Item("Udon Noodles",124, 50.00, true));
         itemSamples.add(new Item("Fried Tofu",77, 27.50, true));
         itemSamples.add(new Item("Fish Cake", 201, 32.00, true));
+        itemSamples.add(new Item("Chasu Pork", 301, 54.00, true));
         itemSamples.add(new Item("Shio Broth", 65, 30.00, false));
         itemSamples.add(new Item("Miso Broth", 78, 35.00, false));
         itemSamples.add(new Item("Tonkotsu Broth", 58, 42.00, false));
         itemSamples.add(new Item("Ukokkei Broth", 62, 44.00, false));
         itemSamples.add(new Item("Salted Egg", 62, 26.00, false));
         itemSamples.add(new Item("Fried Egg", 67, 21.00, false));
-        itemSamples.add(new Item("Chasu Pork", 301, 54.00, false));
         itemSamples.add(new Item("Chicken Slices", 256, 45.00, false));
         itemSamples.add(new Item("Ham", 227, 34.00, false));
         itemSamples.add(new Item("Bacon", 283, 42.00, false));
@@ -141,6 +141,11 @@ public class MainModel {
 
     public void addDenom(int denomIndex, int amountToAdd){
         currentManager.addDenominations(currentVM, denomIndex, amountToAdd);
+    }
+
+    public String getCurrentVMType(){
+        return currentVM.getClass().getName();
+
     }
 
 }

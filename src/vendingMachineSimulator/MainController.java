@@ -92,7 +92,7 @@ public class MainController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!mainModel.hasCreatedVM()){
-                    mainModel.createRegularVM();
+                    mainModel.createSpecialVM();
                     mainView.displayFeedback("Successfully created a Special Vending Machine!", Color.GREEN);
                 }
                 else{
@@ -249,7 +249,7 @@ public class MainController {
             }
         });
 
-        this.mainView.setDisplayMoneyBtn(new ActionListener() {
+        this.mainView.setDisplayMoneyBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainView.clearTables();
@@ -278,10 +278,38 @@ public class MainController {
 
 
         // ----------- Action listeners for the Vending Features for a Vending Machine. -----------
-        this.mainView.setTestBtnListener(new ActionListener() {
+        this.mainView.setVendingBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vendingView.createAndShowGUI();
+                System.out.println(mainModel.getCurrentVMType());
+                if(Objects.equals(mainModel.getCurrentVMType(), "vendingMachineSimulator.RegularVendingMachine")){
+                    vendingView.displayRegularGUI(mainModel.getItemNameList());
+                }
+                else {
+
+                }
+
+            }
+        });
+
+        this.vendingView.setConfirmButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vendingView.updateReceivedItem();
+            }
+        });
+
+        this.vendingView.setGetButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vendingView.closeReceivedPanel();
+            }
+        });
+
+        this.vendingView.setCashInsertButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vendingView.displayCashPanel();
             }
         });
 
