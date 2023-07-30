@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class SpecialItem extends Item implements Cloneable{
 
-    ArrayList<Item> baseItemList; // base items are required, the user cannot order a special item without the base
-    ArrayList<Item> addonItemList; // addons are optional, the user can choose to skip adding addons, or add ones up to a limit
-    int baseItemRequirement; // The amount of base items needed to create the special item
-    int addonItemRequirement; // The amount of addons needed to create the special item (at least)
-    int addonItemLimit; // The upper limit of the amount of addons the user can add (at most)
+    private ArrayList<Item> baseItemList; // base items are required, the user cannot order a special item without the base
+    private ArrayList<Item> addonItemList; // addons are optional, the user can choose to skip adding addons, or add ones up to a limit
+    private int baseItemRequirement; // The amount of base items needed to create the special item
+    private int addonItemRequirement; // The amount of addons needed to create the special item (at least)
+    private int addonItemLimit; // The upper limit of the amount of addons the user can add (at most)
 
     SpecialItem(String name, int baseItemRequirement, int addonItemRequirement, int addonItemLimit){
         super(name,0, 0, true);
@@ -21,17 +21,29 @@ public class SpecialItem extends Item implements Cloneable{
     
     private int getAddonCalories(){
         int totalAddonCalories = 0;
-        for (Item i : addonItemList){
-            totalAddonCalories += i.getCalories();
+        try{
+            for (Item i : addonItemList){
+                totalAddonCalories += i.getCalories();
+            }
         }
+        catch (NullPointerException e){
+            totalAddonCalories = 0;
+        }
+
 
         return totalAddonCalories;
     }
 
     private int getBaseCalories(){
         int totalBaseCalories = 0;
-        for (Item i : baseItemList){
-            totalBaseCalories += i.getCalories();
+
+        try{
+            for (Item i : baseItemList){
+                totalBaseCalories += i.getCalories();
+            }
+        }
+        catch (NullPointerException e){
+            totalBaseCalories = 0;
         }
 
         return totalBaseCalories;
@@ -40,8 +52,13 @@ public class SpecialItem extends Item implements Cloneable{
     private double getBasePrice(){
 
         double totalBasePrice = 0;
-        for (Item i : baseItemList){
-            totalBasePrice += i.getPrice();
+        try{
+            for (Item i : baseItemList){
+                totalBasePrice += i.getPrice();
+            }
+        }
+        catch (NullPointerException e){
+            totalBasePrice = 0;
         }
 
         return totalBasePrice;
@@ -51,8 +68,13 @@ public class SpecialItem extends Item implements Cloneable{
     private double getAddonPrice(){
 
         double totalAddonPrice = 0;
-        for (Item i : baseItemList){
-            totalAddonPrice += i.getPrice();
+        try{
+            for (Item i : addonItemList){
+                totalAddonPrice += i.getPrice();
+            }
+        }
+        catch (NullPointerException e){
+            totalAddonPrice = 0;
         }
 
         return totalAddonPrice;
@@ -69,12 +91,29 @@ public class SpecialItem extends Item implements Cloneable{
         return getBasePrice() + getAddonPrice();
     }
 
-    public void addBase(Item baseItem){
-        baseItemList.add(baseItem);
+    public int getBaseItemRequirement() {
+        return baseItemRequirement;
     }
 
-    public void addAddon(Item addonItem){
+    public int getAddonItemRequirement() {
+        return addonItemRequirement;
+    }
+
+    public int getAddonItemLimit() {
+        return addonItemLimit;
+    }
+
+    public boolean addBase(Item baseItem){
+        baseItemList.add(baseItem);
+        return true;
+    }
+
+    public boolean addAddon(Item addonItem){
+        if (addonItemList.size() + 1 > addonItemLimit)
+            return false;
+
         addonItemList.add(addonItem);
+        return true;
     }
 
     @Override

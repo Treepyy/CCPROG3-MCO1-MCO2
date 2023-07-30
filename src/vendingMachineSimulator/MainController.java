@@ -10,13 +10,15 @@ import java.util.Objects;
 public class MainController {
 
     private MainView mainView;
+    private VendingView vendingView;
     private MainModel mainModel;
     private String type;
 
-    MainController(MainView mainView, MainModel mainModel){
+    MainController(MainView mainView, VendingView vendingView, MainModel mainModel){
 
         this.mainView = mainView;
         this.mainModel = mainModel;
+        this.vendingView = vendingView;
 
         // ----------- Action listeners for the Maintenance Features for a Vending Machine. -----------
         this.mainView.setExitBtnListener(new ActionListener() {
@@ -273,7 +275,16 @@ public class MainController {
 
             }
         });
+
+
         // ----------- Action listeners for the Vending Features for a Vending Machine. -----------
+        this.mainView.setTestBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vendingView.createAndShowGUI();
+            }
+        });
+
 
     }
 

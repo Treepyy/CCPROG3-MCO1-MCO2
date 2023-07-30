@@ -7,8 +7,9 @@ public class Driver {
 
     public static void main(String[] args) {
         MainView mainView = new MainView();
+        VendingView vendingView = new VendingView();
         MainModel mainModel = new MainModel();
-        MainController mainController = new MainController(mainView, mainModel);
+        MainController mainController = new MainController(mainView, vendingView, mainModel);
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class MainView {
 
-    private JFrame mainFrame, errorFrame;
+    private JFrame mainFrame, errorFrame, vendingFrame;
     private JLabel welcomelbl, feedbackLbl, errorLbl, currentStockLbl, currentDenomAmtLbl;
     private JTextField priceTf;
     private JButton createBtn, testBtn, exitBtn, regularBtn, specialBtn, createHomeBtn, testHomeBtn, vendingBtn, maintBtn;
@@ -167,6 +167,8 @@ public class MainView {
 
         this.currentDenomAmtLbl = new JLabel("");
         this.addAmtBtn = new JButton("Add Amount");
+
+
 
 
     }
