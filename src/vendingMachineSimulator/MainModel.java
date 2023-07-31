@@ -3,6 +3,7 @@ package vendingMachineSimulator;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.util.TreeMap;
 
 // TODO: Convert item amount to instantiation (not set number), implement SpecialVendingMachine and SpecialItem, ~~finish addDemon~~,
 
@@ -29,7 +30,7 @@ public class MainModel {
     /**
      * <p>Accesses the vending feature of the Vending Machine.</p>
      */
-    private Customer currentCustomer;
+    private Customer currentCustomer = new Customer();
     /**
      * <p>Accesses the maintenance feature of the Vending Machine.</p>
      */
@@ -82,12 +83,60 @@ public class MainModel {
 
     public ArrayList<String> getItemNameList(){
 
+        int i = 0;
+
         ArrayList<String> itemNames = new ArrayList<String>();
         for (Item item : itemSamples){
-            itemNames.add(item.getName());
+            if (itemSamples.get(i).isPurchasable())
+                itemNames.add(item.getName());
+            i++;
         }
 
         return itemNames;
+    }
+
+    public ArrayList<Double> getItemPriceList(){
+
+        int i = 0;
+
+        ArrayList<Double> itemPrices = new ArrayList<>();
+        for (Item item : itemSamples){
+            if (itemSamples.get(i).isPurchasable())
+                itemPrices.add(item.getPrice());
+            i++;
+        }
+
+        return itemPrices;
+    }
+
+    public ArrayList<Integer> getItemCalorieList(){
+
+        int i = 0;
+
+        ArrayList<Integer> itemCalories = new ArrayList<>();
+        for (Item item : itemSamples){
+            if (itemSamples.get(i).isPurchasable())
+                itemCalories.add(item.getCalories());
+            i++;
+        }
+
+        return itemCalories;
+
+    }
+
+    public ArrayList<Integer> getItemAmountList(){
+
+        int i = 0;
+
+        ArrayList<Integer> itemAmounts = new ArrayList<>();
+        for (Item item : itemSamples){
+            if (itemSamples.get(i).isPurchasable())
+                itemAmounts.add(currentVM.getItemAmount(i));
+            i++;
+        }
+
+        return itemAmounts;
+
     }
 
     public ArrayList<String> getMachineHistory(){
@@ -143,9 +192,33 @@ public class MainModel {
         currentManager.addDenominations(currentVM, denomIndex, amountToAdd);
     }
 
+    public void addToUserWallet(double key){
+        currentCustomer.addCash(key);
+    }
+
+    public void resetUserWallet(){
+        currentCustomer.resetWallet();
+    }
+
+    public String purchaseItem(int itemIndex){
+
+        String message = currentCustomer.purchaseItem(itemIndex);
+
+        return message;
+
+    }
+
+    public String purchaseSpecialItem(int templateIndex, TreeMap<Double, Integer> insertedCashDenominationsAmount){
+
+        String message = "";
+        currentCustomer = new Customer();
+
+        return message;
+
+    }
+
     public String getCurrentVMType(){
         return currentVM.getClass().getName();
-
     }
 
 }

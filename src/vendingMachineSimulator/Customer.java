@@ -2,6 +2,7 @@ package vendingMachineSimulator;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  * Responsible for buying items from a Vending Machine using its own denominations.
@@ -20,7 +21,7 @@ public class Customer {
      *
      * @param current the current vending machine to purchase from
      */
-    public void purchaseItem(RegularVendingMachine current){
+    public void purchaseItemOld(RegularVendingMachine current){
 
         int choice = -1;
         int productChoice;
@@ -114,6 +115,11 @@ public class Customer {
         }
     }
 
+    public String purchaseItem(int itemIndex){
+
+        return null;
+
+    }
 
     /**
      * <p>Converts the user's choice input to a corresponding key value.</p>
@@ -141,6 +147,20 @@ public class Customer {
         };
 
         return keyChoice;
+    }
+
+    public void addCash(double key){
+        userWallet.insertDenomination(key, 1);
+        System.out.println("Current Total: " + userWallet.getTotal());
+    }
+
+    public void resetWallet(){
+        userWallet.resetWallet();
+        System.out.println("Current Total: " + userWallet.getTotal());
+    }
+
+    public void setUserWallet(TreeMap<Double, Integer> denominations){
+        userWallet.setDenominations(denominations);
     }
 
 }

@@ -71,6 +71,10 @@ public class Wallet {
         denominations.put(key, newAmount);
     }
 
+    public void setDenominations(TreeMap<Double, Integer> denominations){
+        this.denominations = denominations;
+    }
+
     /**
      * <p>Withdraws all cash in the Wallet.</p>
      * <p>Resets all denominations to 0 and displays what the user receives.</p>
@@ -128,19 +132,6 @@ public class Wallet {
         for (double key : denominations.keySet()) {
             int newValue = denominations.get(key) + addedWallet.getDenominations().get(key);
             denominations.put(key, newValue);
-        }
-
-    }
-
-    public void addCash(double cash){
-
-        // loops through the entire treemap
-        for (Map.Entry<Double, Integer> entry : denominations.descendingMap().entrySet()) {
-            double denomination = entry.getKey();
-            int count = (int) (cash / denomination);
-            int newCount = entry.getValue() + count;
-            denominations.put(denomination, newCount);
-            cash %= denomination;
         }
 
     }

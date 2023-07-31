@@ -27,7 +27,7 @@ public class MainView {
 
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.setLayout(new FlowLayout(FlowLayout.CENTER));
-        this.mainFrame.setSize(250, 400);
+        this.mainFrame.setSize(350, 400);
 
         this.errorFrame = new JFrame("");
         this.errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -167,9 +167,6 @@ public class MainView {
 
         this.currentDenomAmtLbl = new JLabel("");
         this.addAmtBtn = new JButton("Add Amount");
-
-
-
 
     }
 

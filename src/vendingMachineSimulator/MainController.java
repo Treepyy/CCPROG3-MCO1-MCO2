@@ -13,6 +13,7 @@ public class MainController {
     private VendingView vendingView;
     private MainModel mainModel;
     private String type;
+    private boolean createdCashPanel = false;
 
     MainController(MainView mainView, VendingView vendingView, MainModel mainModel){
 
@@ -162,6 +163,7 @@ public class MainController {
                     mainModel.changeItemPrice(mainView.getItemDropDownSelection(), Double.parseDouble(mainView.getPriceTfText()));
                     mainView.displayFeedback("Price Changed Successfully!", Color.GREEN);
                     mainView.displayProductSelection();
+                    updateVendingViewInformation();
                 }
             }
         });
@@ -197,6 +199,7 @@ public class MainController {
                     mainView.displayFeedback("Stock Added Successfully!", Color.GREEN);
                     mainView.displayRestockSelection();
                     mainView.updateCurrentStock(mainModel.getItemStock(mainView.getItemDropDownSelection()));
+                    updateVendingViewInformation();
                 }
             }
         });
@@ -281,9 +284,12 @@ public class MainController {
         this.mainView.setVendingBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                // "Test Vending Features" option should be disabled while a vending machine window is open, re-enable it only once the current vending machine instance has been closed.
                 System.out.println(mainModel.getCurrentVMType());
+
                 if(Objects.equals(mainModel.getCurrentVMType(), "vendingMachineSimulator.RegularVendingMachine")){
-                    vendingView.displayRegularGUI(mainModel.getItemNameList());
+                    vendingView.displayRegularGUI(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
                 }
                 else {
 
@@ -309,12 +315,42 @@ public class MainController {
         this.vendingView.setCashInsertButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vendingView.displayCashPanel();
+                if (createdCashPanel)
+                    vendingView.displayCashGUI();
+                else{
+                    vendingView.createCashGUI();
+                    createdCashPanel = true;
+                }
+
+            }
+        });
+
+        this.vendingView.setCoinButtonsListeners(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainModel.addToUserWallet(vendingView.getLastPressedValue());
+            }
+        });
+
+        this.vendingView.setBillButtonsListeners(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               mainModel.addToUserWallet(vendingView.getLastPressedValue());
+            }
+        });
+
+        this.vendingView.setCancelButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vendingView.withdrawInsertedCash();
+                mainModel.resetUserWallet();
             }
         });
 
 
     }
+
+
 
     public void addItemTableInformation(){
         ArrayList<String> itemInfo = mainModel.getItemInformation();
@@ -334,5 +370,9 @@ public class MainController {
         for (int i = 0; i < itemInfo.size(); i++){
             mainView.addItemInformation(itemNames.get(i), itemAmounts.get(i), itemPrices.get(i), itemCalories.get(i));
         }
+    }
+
+    public void updateVendingViewInformation(){
+        vendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
     }
 }
