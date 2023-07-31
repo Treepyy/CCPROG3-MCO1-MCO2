@@ -15,7 +15,7 @@ public class VendingView {
     private JLabel screenLabel, amountLabel;
     private String currentInput = "", cashInput = "Current Cash: ₱0.0";
     private JLabel dispensedItemLabel, receivedLabel, cashDenominationLabel;
-    private JButton confirmButton, getButton, cancelButton;
+    private JButton confirmButton, getButton, cancelButton, purchaseButton;
     private JButton[] coinButtons = new JButton[6], billButtons = new JButton[6];
     private ArrayList<String> itemNames;
     private ArrayList<Double> itemPrices;
@@ -33,11 +33,33 @@ public class VendingView {
         this.getButton = new JButton();
         this.cashInsertButton = new JButton();
         this.cancelButton = new JButton();
+        this.purchaseButton = new JButton();
 
         for (int i = 0; i < 6; i++){
             this.coinButtons[i] = new JButton();
             this.billButtons[i] = new JButton();
         }
+
+        keypadPanel = new JPanel(new GridLayout(5, 3, 10, 10));
+        for (int i = 1; i <= 9; i++) {
+            JButton numberButton = new JButton(Integer.toString(i));
+            numberButton.addActionListener(new NumberInputListener());
+            keypadPanel.add(numberButton);
+        }
+        JButton clearButton = new JButton("Clear");
+        clearButton.addActionListener(new NumberInputListener());
+        JButton zeroButton = new JButton("0");
+        zeroButton.addActionListener(new NumberInputListener());
+        purchaseButton.setText("Purchase");
+
+        amountLabel = new JLabel();
+        keypadPanel.add(clearButton);
+        keypadPanel.add(zeroButton);
+        keypadPanel.add(purchaseButton);
+        purchaseButton.setEnabled(false);
+        keypadPanel.add(new JLabel("Inserted: "));
+        keypadPanel.add(amountLabel);
+        keypadPanel.add(new JLabel(""));
 
 
     }
@@ -48,8 +70,13 @@ public class VendingView {
         this.itemCalories = itemCalories;
         this.itemAmounts = itemAmounts;
 
-        updateItemPanel();
-        frame.validate();
+        try {
+            updateItemPanel();
+            frame.validate();
+        }
+        catch (NullPointerException e){
+            System.out.println("Frame not in view...");
+        }
     }
 
     public void displayRegularGUI(ArrayList<String> itemNames, ArrayList<Double> itemPrices, ArrayList<Integer> itemCalories, ArrayList<Integer> itemAmounts) {
@@ -76,26 +103,6 @@ public class VendingView {
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputField = new JTextField();
         inputField.setEditable(false);
-
-        keypadPanel = new JPanel(new GridLayout(5, 3, 10, 10));
-        for (int i = 1; i <= 9; i++) {
-            JButton numberButton = new JButton(Integer.toString(i));
-            numberButton.addActionListener(new NumberInputListener());
-            keypadPanel.add(numberButton);
-        }
-        JButton clearButton = new JButton("Clear");
-        clearButton.addActionListener(new NumberInputListener());
-        JButton zeroButton = new JButton("0");
-        zeroButton.addActionListener(new NumberInputListener());
-        confirmButton.setText("Confirm");
-
-        amountLabel = new JLabel();
-        keypadPanel.add(clearButton);
-        keypadPanel.add(zeroButton);
-        keypadPanel.add(confirmButton);
-        keypadPanel.add(new JLabel("Inserted: "));
-        keypadPanel.add(amountLabel);
-        keypadPanel.add(new JLabel(""));
 
         inputPanel.add(keypadPanel, BorderLayout.SOUTH);
 
@@ -332,6 +339,7 @@ public class VendingView {
         cashFrame.setVisible(false);
         currentAmount = 0.0;
         updateAmountLabel();
+        amountLabel.validate();
     }
 
     public void setCancelButtonListener(ActionListener actionListener){
@@ -367,7 +375,8 @@ public class VendingView {
 
     private void updateInputField() {
         // inputField.setText(currentInput);
-        if (currentInput.length() < 3)
+        screenLabel.setForeground(Color.BLACK);
+        if (currentInput.trim().length() < 3)
             screenLabel.setText(currentInput);
     }
 
@@ -376,8 +385,10 @@ public class VendingView {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             if (command.equals("Clear")) {
+                purchaseButton.setEnabled(false);
                 currentInput = " ";
             } else {
+                purchaseButton.setEnabled(true);
                 currentInput += command;
             }
             updateInputField();
@@ -406,11 +417,67 @@ public class VendingView {
             }
 
         }
-        catch (NumberFormatException err){
-            System.out.println("empty input");
-        }
         catch (NullPointerException err){
-            System.out.println("out of bounds");
+            displayError("INVALID NUMBER");
+        }
+    }
+
+    public void displayError(String errorMessage){
+        screenLabel.setText(errorMessage);
+        screenLabel.setForeground(Color.RED);
+        screenLabel.validate();
+        temporaryKeypadLock();
+    }
+
+    public void displayErrorWithdraw(String errorMessage){
+        screenLabel.setText(errorMessage);
+        screenLabel.setForeground(Color.RED);
+        screenLabel.validate();
+        withdrawInsertedCash();
+        temporaryKeypadLock();
+    }
+
+    public void displaySuccess(String message){
+        screenLabel.setText(message);
+        screenLabel.setForeground(Color.GREEN);
+        screenLabel.validate();
+        updateReceivedItem();
+        temporaryKeypadLock();
+    }
+
+    private void temporaryKeypadLock(){  // temporarily disables keypad while errors are present
+        disableKeypad();
+        Timer t = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enableKeypad();
+                purchaseButton.setEnabled(false);
+                currentInput = " ";
+                updateInputField();
+            }
+        });
+        t.setRepeats(false);
+        t.start();
+    }
+
+    private void disableKeypad(){
+        setPanelEnabled(this.keypadPanel, false);
+    }
+
+    private void enableKeypad(){
+        setPanelEnabled(this.keypadPanel, true);
+    }
+
+    void setPanelEnabled(JPanel panel, Boolean isEnabled) { // Function based on answer of Kesavamoorthi on StackOverflow: https://stackoverflow.com/questions/19324918/how-to-disable-all-components-in-a-jpanel
+        panel.setEnabled(isEnabled);
+
+        Component[] components = panel.getComponents();
+
+        for (Component component : components) {
+            if (component instanceof JPanel) {
+                setPanelEnabled((JPanel) component, isEnabled);
+            }
+            component.setEnabled(isEnabled);
         }
     }
 
@@ -419,8 +486,8 @@ public class VendingView {
         receivedFrame.dispose();
     }
 
-    public void setConfirmButtonListener(ActionListener actionListener){
-        this.confirmButton.addActionListener(actionListener);
+    public void setPurchaseButtonListener(ActionListener actionListener){
+        this.purchaseButton.addActionListener(actionListener);
     }
 
     public void setGetButtonListener(ActionListener actionListener){
@@ -432,7 +499,7 @@ public class VendingView {
     }
 
     public int getNumberInput(){
-        return Integer.parseInt(currentInput);
+        return Integer.parseInt(currentInput.trim());
     }
 }
 

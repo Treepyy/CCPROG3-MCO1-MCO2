@@ -115,9 +115,45 @@ public class Customer {
         }
     }
 
-    public String purchaseItem(int itemIndex){
+    public String purchaseItem(RegularVendingMachine current, int itemIndex){
 
-        return null;
+        double currentAmount = userWallet.getTotal();
+        if (current.getItemAmount(itemIndex) == 0){ // Checks if the item amount is greater than 0, if not, returns an error message
+            return "OUT OF STOCK";
+        }
+        else{
+            double change = userWallet.getTotal() - current.getItemPrice(itemIndex);
+            current.addFunds(userWallet); // The denominations inside userWallet is added into the machineWallet.
+
+            if (change >= 0 && current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
+                // If the machine has enough denominations to provide the change, continues.
+                // The product is dispensed from the machine, the change (in denominations) are subtracted from the machine and is given to the user.
+                current.dispenseItem(itemIndex);
+                current.subtractFunds(change);
+                // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
+                userWallet.resetWallet();
+                current.updatePurchaseHistory(currentAmount, itemIndex, change);
+                return "SUCCESS";
+            }
+            else if (!current.isItemPurchasable(itemIndex)){
+                return "INVALID NUMBER";
+            }
+            else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
+                // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
+                current.subtractFunds(userWallet);
+                userWallet.withdrawAll();
+                return  "CAN'T GET CHANGE";
+            }
+            else{
+                // Else, if the change value reaches a negative number, displays an insufficient funds message
+                current.subtractFunds(userWallet);
+                userWallet.withdrawAll();
+                return "INSUFFICIENT FUNDS";
+            }
+        }
+    }
+
+    public void purchaseSpecialItem(RegularVendingMachine current, int templateIndex){
 
     }
 

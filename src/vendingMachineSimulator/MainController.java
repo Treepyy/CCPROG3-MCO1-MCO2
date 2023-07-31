@@ -298,10 +298,24 @@ public class MainController {
             }
         });
 
-        this.vendingView.setConfirmButtonListener(new ActionListener() {
+        this.vendingView.setPurchaseButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vendingView.updateReceivedItem();
+                String message = mainModel.purchaseItem(vendingView.getNumberInput()-1);
+                System.out.println(message);
+                if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
+                    vendingView.displayErrorWithdraw(message);
+                }
+                else if (Objects.equals(message, "SUCCESS")){
+                    vendingView.displaySuccess(message);
+                }
+                else {
+                    vendingView.displayError(message);
+                }
+
+                updateVendingViewInformation();
+
+
             }
         });
 

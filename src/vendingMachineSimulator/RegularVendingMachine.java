@@ -319,4 +319,8 @@ public class RegularVendingMachine {
         return output;
     }
 
+    public boolean isItemPurchasable(int itemIndex){
+        return itemSamples.get(itemIndex).isPurchasable();
+    }
+
 }

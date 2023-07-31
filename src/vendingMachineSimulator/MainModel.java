@@ -201,11 +201,7 @@ public class MainModel {
     }
 
     public String purchaseItem(int itemIndex){
-
-        String message = currentCustomer.purchaseItem(itemIndex);
-
-        return message;
-
+        return currentCustomer.purchaseItem(currentVM, itemIndex);
     }
 
     public String purchaseSpecialItem(int templateIndex, TreeMap<Double, Integer> insertedCashDenominationsAmount){
