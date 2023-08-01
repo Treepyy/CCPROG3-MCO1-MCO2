@@ -301,16 +301,26 @@ public class MainController {
         this.vendingView.setPurchaseButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String message = mainModel.purchaseItem(vendingView.getNumberInput()-1);
-                System.out.println(message);
+                String withdrawMessage = mainModel.getWithdrawMessage();
+                String message = "";
+                try{
+                    message = mainModel.purchaseItem(vendingView.getNumberInput()-1);
+                }
+                catch (ArrayIndexOutOfBoundsException err){
+                    vendingView.displayError("INVALID NUMBER");
+                }
+
                 if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
                     vendingView.displayErrorWithdraw(message);
+                    if (!withdrawMessage.equals(""))
+                        vendingView.returnInsertedMoney(withdrawMessage);
                 }
-                else if (Objects.equals(message, "SUCCESS")){
-                    vendingView.displaySuccess(message);
+                else if (Objects.equals(message, "INVALID NUMBER") || Objects.equals(message, "OUT OF STOCK")){
+                    vendingView.displayError(message);
                 }
                 else {
-                    vendingView.displayError(message);
+                    vendingView.updateReceivedItem();
+                    vendingView.updateReceivedChange(message);
                 }
 
                 updateVendingViewInformation();

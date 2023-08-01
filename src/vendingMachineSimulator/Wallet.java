@@ -82,9 +82,12 @@ public class Wallet {
      */
     public void withdrawAll(){
         if (getTotal() != 0.0){
-            displayReceivedDenominations(denominations);
             resetWallet();
         }
+    }
+
+    public String getWithdrawMessage(){
+        return displayReceivedDenominations(denominations);
     }
 
     /**
@@ -183,10 +186,10 @@ public class Wallet {
      *
      * @param denominations is the treemap to be displayed as items received
      */
-    private void displayReceivedDenominations(TreeMap<Double, Integer> denominations){
+    private String displayReceivedDenominations(TreeMap<Double, Integer> denominations){
 
         String currencyName, type;
-        System.out.println("You Received:");
+        String message = "";
 
         for (Map.Entry<Double, Integer> entry : denominations.entrySet()) {
             double denomination = entry.getKey();
@@ -205,9 +208,11 @@ public class Wallet {
                     currencyName = " Peso ";
                     type = "Bill";
                 }
-                System.out.println(count + "x " + denomination + currencyName + type);
+                message += count + "x " + denomination + currencyName + type + "-";
             }
         }
+
+        return message;
 
     }
 

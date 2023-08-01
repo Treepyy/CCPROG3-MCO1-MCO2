@@ -61,6 +61,9 @@ public class VendingView {
         keypadPanel.add(amountLabel);
         keypadPanel.add(new JLabel(""));
 
+        dispensedItemPanel = new JPanel();
+        receivedFrame = new JFrame();
+
 
     }
 
@@ -128,32 +131,23 @@ public class VendingView {
         dispensedItemLabel = new JLabel();
         dispensedItemContainer.add(dispensedItemLabel);
 
-        JPanel cashDenominationContainer = new JPanel();
-        cashDenominationContainer.add(new JLabel("Your Change: ", SwingConstants.CENTER));
-        cashDenominationLabel = new JLabel();
-        cashDenominationContainer.add(cashDenominationLabel);
-
         // Setup for received item popup
         getButton.setText("GET");
         JPanel getButtonContainer = new JPanel();
         getButtonContainer.add(getButton);
 
         // for items
-        dispensedItemPanel = new JPanel();
         dispensedItemPanel.setLayout(new BoxLayout(dispensedItemPanel, BoxLayout.PAGE_AXIS));
         dispensedItemPanel.add(new JLabel("You Received:", SwingConstants.CENTER));
         dispensedItemPanel.add(dispensedItemContainer);
         receivedLabel = new JLabel();
         dispensedItemPanel.add(receivedLabel);
 
-        // for the change (if applicable)
-        dispensedItemPanel.add(cashDenominationContainer);
-
         // adds the GET button
         dispensedItemPanel.add(getButtonContainer);
 
         // Create the received frame (popup window for dispensed item)
-        receivedFrame = new JFrame("Successfully Dispensed!");
+        receivedFrame.setTitle("Successfully Dispensed!");
         receivedFrame.setSize(400, 350);
         receivedFrame.setLayout(new BorderLayout());
 
@@ -260,7 +254,7 @@ public class VendingView {
                 JLabel stockLabel;
 
                 if (itemAmounts.get(i - 1) > 0) {
-                    stockLabel = new JLabel("In Stock!", SwingConstants.CENTER);
+                    stockLabel = new JLabel(itemAmounts.get(i - 1) + " In Stock!", SwingConstants.CENTER);
                     stockLabel.setForeground(Color.GREEN);
                 } else {
                     stockLabel = new JLabel("Out of Stock!", SwingConstants.CENTER);
@@ -396,6 +390,11 @@ public class VendingView {
     }
 
     public void updateReceivedItem(){
+
+        this.currentAmount = 0.0;
+        updateAmountLabel();
+        this.amountLabel.validate();
+
         try{
             // Get the current input and convert it to an integer
             int selectedItemId = Integer.parseInt(currentInput.trim());
@@ -420,6 +419,68 @@ public class VendingView {
         catch (NullPointerException err){
             displayError("INVALID NUMBER");
         }
+    }
+
+    // TODO: convert money to img icons with tooltips
+    public void updateReceivedChange(String message){
+
+        dispensedItemPanel.remove(getButton);
+        String[] messageParts = message.split("-");
+
+        JPanel cashDenominationContainer = new JPanel(new GridLayout(messageParts.length + 1, 1, 5, 5));
+        cashDenominationContainer.add(new JLabel("Your Change: ", SwingConstants.CENTER));
+
+        for (String parts : messageParts){
+            JLabel cashDenominationLabel = new JLabel(parts, SwingConstants.CENTER);
+            cashDenominationContainer.add(cashDenominationLabel);
+        }
+
+        // adds the change
+        dispensedItemPanel.add(cashDenominationContainer);
+        dispensedItemPanel.add(getButton);
+
+    }
+
+    public void returnInsertedMoney(String message){
+
+        String[] messageParts = message.split("-");
+
+        JFrame insertedMoneyFrame = new JFrame();
+        insertedMoneyFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel returnPanel = new JPanel(new GridLayout(3, 1, 5, 5));
+
+        // Create the received frame (popup window for dispensed item)
+        insertedMoneyFrame.setTitle("Money Returned!");
+        insertedMoneyFrame.setSize(400, 350);
+        insertedMoneyFrame.setLayout(new BorderLayout());
+
+        returnPanel.add(new JLabel("Your Change: ", SwingConstants.CENTER));
+        JPanel cashDenominationContainer = new JPanel(new GridLayout(messageParts.length + 1, 1, 5, 5));
+
+        for (String parts : messageParts){
+            JLabel cashDenominationLabel = new JLabel(parts, SwingConstants.CENTER);
+            cashDenominationContainer.add(cashDenominationLabel);
+        }
+
+        JPanel getButtonContainer = new JPanel();
+        JButton getReturnedButton = new JButton("GET");
+        getReturnedButton.setAlignmentX(SwingConstants.CENTER);
+        getReturnedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                insertedMoneyFrame.setVisible(false);
+            }
+        });
+        getButtonContainer.add(getReturnedButton);
+
+        // adds the change and GET button
+        returnPanel.add(cashDenominationContainer);
+        returnPanel.add(getButtonContainer);
+
+        insertedMoneyFrame.add(returnPanel);
+        insertedMoneyFrame.setVisible(true);
+        insertedMoneyFrame.validate();
+
     }
 
     public void displayError(String errorMessage){

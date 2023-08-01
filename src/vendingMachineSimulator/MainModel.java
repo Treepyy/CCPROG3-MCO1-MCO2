@@ -217,4 +217,8 @@ public class MainModel {
         return currentVM.getClass().getName();
     }
 
+    public String getWithdrawMessage(){
+        return currentCustomer.getWithdrawMessage();
+    }
+
 }

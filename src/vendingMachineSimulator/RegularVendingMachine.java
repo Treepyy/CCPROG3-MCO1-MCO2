@@ -295,7 +295,6 @@ public class RegularVendingMachine {
         String currencyName, type;
 
         if (changeVal > 0) {
-            output += "Your Change:\n";
             for (Map.Entry<Double, Integer> entry : change.entrySet()) {
                 double denomination = entry.getKey();
                 int count = entry.getValue();
@@ -311,7 +310,7 @@ public class RegularVendingMachine {
                         currencyName = " Peso ";
                         type = "Bill";
                     }
-                    output += count + "x " + denomination + currencyName + type + "\n";
+                    output += count + "x " + denomination + currencyName + type + "-";
                 }
             }
         }

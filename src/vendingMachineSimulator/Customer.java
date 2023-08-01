@@ -119,6 +119,11 @@ public class Customer {
 
         double currentAmount = userWallet.getTotal();
         if (current.getItemAmount(itemIndex) == 0){ // Checks if the item amount is greater than 0, if not, returns an error message
+
+            if (!current.isItemPurchasable(itemIndex)){ // If item in index is not purchasable, display INVALID NUMBER instead.
+                return "INVALID NUMBER";
+            }
+
             return "OUT OF STOCK";
         }
         else{
@@ -133,10 +138,8 @@ public class Customer {
                 // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
                 userWallet.resetWallet();
                 current.updatePurchaseHistory(currentAmount, itemIndex, change);
-                return "SUCCESS";
-            }
-            else if (!current.isItemPurchasable(itemIndex)){
-                return "INVALID NUMBER";
+
+                return current.displayReceivedChangeMessage(change);
             }
             else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
                 // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
@@ -155,6 +158,10 @@ public class Customer {
 
     public void purchaseSpecialItem(RegularVendingMachine current, int templateIndex){
 
+    }
+
+    public String getWithdrawMessage(){
+       return userWallet.getWithdrawMessage();
     }
 
     /**
@@ -193,10 +200,6 @@ public class Customer {
     public void resetWallet(){
         userWallet.resetWallet();
         System.out.println("Current Total: " + userWallet.getTotal());
-    }
-
-    public void setUserWallet(TreeMap<Double, Integer> denominations){
-        userWallet.setDenominations(denominations);
     }
 
 }
