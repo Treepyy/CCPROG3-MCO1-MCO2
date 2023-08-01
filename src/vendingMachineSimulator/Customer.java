@@ -1,5 +1,6 @@
 package vendingMachineSimulator;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -156,7 +157,10 @@ public class Customer {
         }
     }
 
-    public void purchaseSpecialItem(RegularVendingMachine current, int templateIndex){
+    public void purchaseSpecialItem(RegularVendingMachine current, int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
+
+        SpecialVendingMachine currentSP = (SpecialVendingMachine)current;
+        currentSP.createCustomItem(templateIndex, baseIndexes, addonIndexes);
 
     }
 

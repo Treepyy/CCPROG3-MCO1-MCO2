@@ -121,6 +121,7 @@ public class MainView {
         this.confirmMoneySelectBtn.setPreferredSize(new Dimension(100, 30));
 
         this.historyTextArea = new JTextArea();
+        this.historyTextArea.setEditable(false);
 
         this.itemNames = new JComboBox<>();
 

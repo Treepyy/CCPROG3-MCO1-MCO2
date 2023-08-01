@@ -562,5 +562,9 @@ public class VendingView {
     public int getNumberInput(){
         return Integer.parseInt(currentInput.trim());
     }
+
+    public void disposeCurrentWindow(){
+        this.frame.dispose();
+    }
 }
 

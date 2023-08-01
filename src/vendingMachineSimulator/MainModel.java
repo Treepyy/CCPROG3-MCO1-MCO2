@@ -87,9 +87,7 @@ public class MainModel {
 
         ArrayList<String> itemNames = new ArrayList<String>();
         for (Item item : itemSamples){
-            if (itemSamples.get(i).isPurchasable())
-                itemNames.add(item.getName());
-            i++;
+            itemNames.add(item.getName());
         }
 
         return itemNames;
@@ -115,9 +113,7 @@ public class MainModel {
 
         ArrayList<Integer> itemCalories = new ArrayList<>();
         for (Item item : itemSamples){
-            if (itemSamples.get(i).isPurchasable())
-                itemCalories.add(item.getCalories());
-            i++;
+            itemCalories.add(item.getCalories());
         }
 
         return itemCalories;
@@ -130,13 +126,22 @@ public class MainModel {
 
         ArrayList<Integer> itemAmounts = new ArrayList<>();
         for (Item item : itemSamples){
-            if (itemSamples.get(i).isPurchasable())
-                itemAmounts.add(currentVM.getItemAmount(i));
+            itemAmounts.add(currentVM.getItemAmount(i));
             i++;
         }
 
         return itemAmounts;
 
+    }
+
+    public ArrayList<String> getTemplateNames(){
+
+        ArrayList<String> templateNames = new ArrayList<>();
+        for (SpecialItem template : customItemTemplates){
+            templateNames.add(template.getName());
+        }
+
+        return templateNames;
     }
 
     public ArrayList<String> getMachineHistory(){

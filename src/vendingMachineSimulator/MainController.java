@@ -11,15 +11,17 @@ public class MainController {
 
     private MainView mainView;
     private VendingView vendingView;
+    private SpecialVendingView specialVendingView;
     private MainModel mainModel;
-    private String type;
-    private boolean createdCashPanel = false;
+    private String currentType, type;
+    private boolean createdRegularCashPanel = false, createdSpecialCashPanel = false;
 
-    MainController(MainView mainView, VendingView vendingView, MainModel mainModel){
+    MainController(MainView mainView, VendingView vendingView, MainModel mainModel, SpecialVendingView specialVendingView){
 
         this.mainView = mainView;
         this.mainModel = mainModel;
         this.vendingView = vendingView;
+        this.specialVendingView = specialVendingView;
 
         // ----------- Action listeners for the Maintenance Features for a Vending Machine. -----------
         this.mainView.setExitBtnListener(new ActionListener() {
@@ -60,6 +62,7 @@ public class MainController {
                 if (!mainModel.hasCreatedVM()){
                     mainModel.createRegularVM();
                     mainView.displayFeedback("Successfully created a Regular Vending Machine!", Color.GREEN);
+                    currentType = "Regular";
                 }
                 else{
                     mainView.displayOverwriteConfirmation();
@@ -71,11 +74,15 @@ public class MainController {
         this.mainView.setOverwriteYesBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Objects.equals(type, "Regular"))
+                if (Objects.equals(type, "Regular")){
                     mainModel.createRegularVM();
-                else
-                    mainModel.createSpecialVM();
+                    currentType = "Regular";
+                }
 
+                else{
+                    mainModel.createSpecialVM();
+                    currentType = "Special";
+                }
                 mainView.closeErrorFrame();
                 mainView.displayFeedback("Successfully created a " + type + " Vending Machine!", Color.GREEN);
             }
@@ -95,6 +102,7 @@ public class MainController {
                 if (!mainModel.hasCreatedVM()){
                     mainModel.createSpecialVM();
                     mainView.displayFeedback("Successfully created a Special Vending Machine!", Color.GREEN);
+                    currentType = "Special";
                 }
                 else{
                     mainView.displayOverwriteConfirmation();
@@ -287,17 +295,29 @@ public class MainController {
 
                 // "Test Vending Features" option should be disabled while a vending machine window is open, re-enable it only once the current vending machine instance has been closed.
                 System.out.println(mainModel.getCurrentVMType());
+                try {
+                    if(Objects.equals(currentType, "Regular")){
+                        vendingView.disposeCurrentWindow();
+                    }
+                    else {
+                        specialVendingView.disposeCurrentWindow();
+                    }
+                }
+                catch (NullPointerException err){
 
-                if(Objects.equals(mainModel.getCurrentVMType(), "vendingMachineSimulator.RegularVendingMachine")){
+                }
+
+                if(Objects.equals(currentType, "Regular")){
                     vendingView.displayRegularGUI(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
                 }
                 else {
-
+                    specialVendingView.displaySpecialGUI(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList(), mainModel.getTemplateNames());
                 }
 
             }
         });
 
+        // Action Listeners for "Regular Vending Machine"
         this.vendingView.setPurchaseButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -320,7 +340,8 @@ public class MainController {
                 }
                 else {
                     vendingView.updateReceivedItem();
-                    vendingView.updateReceivedChange(message);
+                    if (!message.equals(""))
+                        vendingView.updateReceivedChange(message);
                 }
 
                 updateVendingViewInformation();
@@ -339,11 +360,11 @@ public class MainController {
         this.vendingView.setCashInsertButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (createdCashPanel)
+                if (createdRegularCashPanel)
                     vendingView.displayCashGUI();
                 else{
                     vendingView.createCashGUI();
-                    createdCashPanel = true;
+                    createdRegularCashPanel = true;
                 }
 
             }
@@ -371,6 +392,112 @@ public class MainController {
             }
         });
 
+        // Action Listeners for "Special Vending Machine"
+        this.specialVendingView.setPurchaseButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String withdrawMessage = mainModel.getWithdrawMessage();
+                String message = "";
+
+                if (specialVendingView.getNumberInput() < 10){
+
+                    message = mainModel.purchaseItem(specialVendingView.getNumberInput()-1);
+
+
+                    if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
+                        specialVendingView.displayErrorWithdraw(message);
+                        if (!withdrawMessage.equals(""))
+                            specialVendingView.returnInsertedMoney(withdrawMessage);
+                    }
+                    else if (Objects.equals(message, "INVALID NUMBER") || Objects.equals(message, "OUT OF STOCK")){
+                        specialVendingView.displayError(message);
+                    }
+                    else {
+                        specialVendingView.updateReceivedItem();
+                        if (!message.equals(""))
+                            specialVendingView.updateReceivedChange(message);
+                    }
+
+                    updateVendingViewInformation();
+                }
+
+                else if (specialVendingView.getNumberInput() >= 10 && specialVendingView.getNumberInput() < 13){
+                    specialVendingView.displayCustomizeMenu(specialVendingView.getNumberInput() - 10);
+
+                }
+                else {
+                    specialVendingView.displayError("INVALID NUMBER");
+                }
+
+
+
+
+            }
+        });
+
+
+        this.specialVendingView.setConfirmCustomizedButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (specialVendingView.getSelectedBaseIndexes().size() == 0 || specialVendingView.getSelectedAddonIndexes().size() == 0){
+
+                }
+                else {
+                    for (int i : specialVendingView.getSelectedBaseIndexes()){
+                        System.out.println(i);
+                    }
+                    for (int i : specialVendingView.getSelectedAddonIndexes()){
+                        System.out.println(i);
+                    }
+                }
+
+
+                System.out.println("Ping!");
+            }
+        });
+
+        this.specialVendingView.setGetButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                specialVendingView.closeReceivedPanel();
+            }
+        });
+
+        this.specialVendingView.setCashInsertButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (createdSpecialCashPanel)
+                    specialVendingView.displayCashGUI();
+                else{
+                    specialVendingView.createCashGUI();
+                    createdSpecialCashPanel = true;
+                }
+
+            }
+        });
+
+        this.specialVendingView.setCoinButtonsListeners(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainModel.addToUserWallet(specialVendingView.getLastPressedValue());
+            }
+        });
+
+        this.specialVendingView.setBillButtonsListeners(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainModel.addToUserWallet(specialVendingView.getLastPressedValue());
+            }
+        });
+
+        this.specialVendingView.setCancelButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                specialVendingView.withdrawInsertedCash();
+                mainModel.resetUserWallet();
+            }
+        });
 
     }
 
@@ -397,6 +524,9 @@ public class MainController {
     }
 
     public void updateVendingViewInformation(){
-        vendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
+        if (Objects.equals(currentType, "Regular"))
+            vendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
+        else
+            specialVendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
     }
 }
