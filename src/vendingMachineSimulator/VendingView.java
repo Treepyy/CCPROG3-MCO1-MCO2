@@ -7,6 +7,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+/**
+ * GUI setup for the Regular Vending Machine
+ * @author Vance Gyan M. Robles
+ */
+
 public class VendingView {
     private JFrame frame, receivedFrame, cashFrame;
     private JPanel itemPanel, dispensedItemPanel, keypadPanel, coinPanel;
@@ -240,7 +245,7 @@ public class VendingView {
             // Clears previous label
             itemPanel.removeAll();
 
-            // Add items to the item panel (replace with actual image file names and item names)
+            // Add items to the item panel
             for (int i = 1; i <= 9; i++) {
                 String itemImageFileName = IMAGE_DIRECTORY_PATH + "/items/item" + i + ".png";
                 ImageIcon icon = new ImageIcon(getClass().getResource(itemImageFileName));
@@ -421,7 +426,6 @@ public class VendingView {
         }
     }
 
-    // TODO: convert money to img icons with tooltips
     public void updateReceivedChange(String message){
 
         dispensedItemPanel.remove(getButton);

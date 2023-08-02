@@ -6,116 +6,24 @@ import java.util.Scanner;
 import java.util.HashMap;
 
 /**
- * Responsible for buying items from a Vending Machine using its own denominations.
+ * Represents a customer of the vending machine.
+ * The customer can purchase items from both RegularVendingMachine and SpecialVendingMachine.
+ * The customer has a wallet that stores denominations to use for purchases.
  * @author Vance Gyan M. Robles
  */
+
 public class Customer {
     /**
-     * <p>Scanner for getting user inputs.</p>
+     * The Wallet of the user, which stores the current customer's denominations
      */
-    private Scanner input = new Scanner(System.in);
     private Wallet userWallet = new Wallet();
 
     /**
-     * <p>Displays the customer menu and allows the user to purchase an item from the vending machine.</p>
-     * <p>Input of money to the machine is done through insertion of the different bill/coin denominations.</p>
-     *
-     * @param current the current vending machine to purchase from
+     * Purchases a regular item from the RegularVendingMachine at the specified item index.
+     * @param current The RegularVendingMachine instance to purchase the item from.
+     * @param itemIndex The index of the item to purchase.
+     * @return A message indicating the status of the purchase.
      */
-    public void purchaseItemOld(RegularVendingMachine current){
-
-        int choice = -1;
-        int productChoice;
-        double keyChoice = 0;
-        double currentAmount;
-
-        // Continues loop until user inputs [0] for exiting.
-        while (choice != 0) {
-
-            currentAmount = userWallet.getTotal();
-            System.out.println();
-            System.out.println("Current Total Money Inserted: " + currentAmount); // The total money inserted will be displayed
-            System.out.print("Pick an Option: ");
-            try{
-                choice = input.nextInt();
-            }
-            catch (InputMismatchException ex){
-                input.reset();
-                input.next();
-                choice = -1;
-            }
-            if (choice > 0 && choice < 13){
-                keyChoice = convertToKey(choice);
-                userWallet.insertDenomination(keyChoice, 1); // Once user picks a denomination, one of it will be inserted into the userWallet
-            }
-
-            else if (choice == 0){
-                System.out.println("\nTransaction aborted!");
-                userWallet.withdrawAll(); // If user chooses to exit, all money inserted will be returned.
-                System.out.println();
-            }
-
-            else if (choice == 13){
-                if (userWallet.getTotal() == 0){
-                    System.out.println("\nPlease insert money into the machine first!"); // Displays error when user tries to pick product without inserting money first
-                }
-                else{
-                    productChoice = 0;
-
-                    if (productChoice == 9){ // Exits menu and returns money if user changes their mind and aborts
-                        System.out.println("\nTransaction aborted!");
-                        userWallet.withdrawAll();
-                        System.out.println();
-                        choice = 0;
-                    }
-                    else if (productChoice >= 0 && productChoice < 8){
-
-                        if (current.getItemAmount(productChoice) == 0){ // Checks if the item amount is greater than 0, if not then displays an error message
-                            System.out.println("\nError: Not enough items in the machine!");
-                        }
-                        else{
-                            // The change is calculated by getting the difference of the total funds and price of the selected item.
-                            double change = userWallet.getTotal() - current.getItemPrice(productChoice);
-                            current.addFunds(userWallet); // The denominations inside userWallet is added into the machineWallet.
-                            if (change >= 0 && current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
-                                // If the machine has enough denominations to provide the change, continues.
-                                // The product is dispensed from the machine, the change (in denominations) are subtracted from the machine and is given to the user.
-                                System.out.println();
-                                current.dispenseItem(productChoice);
-                                current.subtractFunds(change);
-                                // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
-                                userWallet.resetWallet();
-                                current.updatePurchaseHistory(currentAmount, productChoice, change);
-                                System.out.println("Purchase Successful!");
-                            }
-                            else if (change >= 0 && !current.hasEnoughDenominations(userWallet.convertToDenominations(change))){
-                                // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
-                                System.out.println();
-                                System.out.println("Error: Not enough funds in the machine for change!");
-                                current.subtractFunds(userWallet);
-                                userWallet.withdrawAll();
-                                System.out.println("Inserted funds have been returned.");
-                            }
-                            else{
-                                // Else, if the change value reaches a negative number, displays an insufficient funds message
-                                System.out.println();
-                                System.out.println("Insufficient Funds!");
-                                current.subtractFunds(userWallet);
-                                userWallet.withdrawAll();
-                                System.out.println("Transaction aborted!");
-                            }
-                        }
-
-                    }
-                    // Choosing productChoice == [8] will return user to the denomination input loop.
-                }
-            }
-            else {
-                System.out.println("\nInvalid input!");
-            }
-        }
-    }
-
     public String purchaseItem(RegularVendingMachine current, int itemIndex){
 
         System.out.println("TOTAL IN WALLET: " + userWallet.getTotal());
@@ -158,6 +66,14 @@ public class Customer {
         }
     }
 
+    /**
+     * Purchases a special item from the SpecialVendingMachine using the specified template index, base item indexes, and addon item indexes.
+     * @param currentSP The SpecialVendingMachine instance to purchase the special item from.
+     * @param templateIndex The index of the special item template to use.
+     * @param baseIndexes The indexes of the base items to use in the special item.
+     * @param addonIndexes The indexes of the addon items to use in the special item.
+     * @return A message indicating the status of the purchase.
+     */
     public String purchaseSpecialItem(SpecialVendingMachine currentSP, int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
 
         System.out.println("TOTAL IN WALLET: " + userWallet.getTotal());
@@ -233,6 +149,10 @@ public class Customer {
 
     }
 
+    /**
+     * Retrieves the message for withdrawing cash (the machine returning the inserted cash to the user)
+     * @return The corresponding message containing denominations and their amounts
+     */
     public String getWithdrawMessage(){
        return userWallet.getWithdrawMessage();
     }
@@ -265,16 +185,27 @@ public class Customer {
         return keyChoice;
     }
 
+    /**
+     * Adds the specified denomination to the user's wallet.
+     * @param key The denomination to add.
+     */
     public void addCash(double key){
         userWallet.insertDenomination(key, 1);
         System.out.println("Current Total: " + userWallet.getTotal());
     }
 
+    /**
+     * Resets the user's wallet by emptying it of all denominations.
+     */
     public void resetWallet(){
         userWallet.resetWallet();
         System.out.println("Current Total: " + userWallet.getTotal());
     }
 
+    /**
+     * Retrieves the total amount of money in the user's wallet.
+     * @return The total amount of money in the wallet.
+     */
     public double getUserWalletTotal(){
         return userWallet.getTotal();
     }

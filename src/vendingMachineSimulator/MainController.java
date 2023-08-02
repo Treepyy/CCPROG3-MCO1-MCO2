@@ -7,6 +7,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * The controller model for the GUI, allows the view(s) to interact with the model
+ * @author Vance Gyan M. Robles
+ */
 public class MainController {
 
     private MainView mainView;
@@ -602,7 +606,9 @@ public class MainController {
     }
 
 
-
+    /**
+     * Adds the table information to be displayed in the main view
+     */
     public void addItemTableInformation(){
         ArrayList<String> itemInfo = mainModel.getItemInformation();
         ArrayList<String> itemNames = new ArrayList<>();
@@ -623,6 +629,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Refreshes certain components of vendingView to account for stock changes
+     */
     public void updateVendingViewInformation(){
         if (Objects.equals(currentType, "Regular"))
             vendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());

@@ -5,8 +5,6 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.TreeMap;
 
-// TODO: Convert item amount to instantiation (not set number), implement SpecialVendingMachine and SpecialItem, ~~finish addDemon~~,
-
 /**
  * Serves as the main model to interact with the different parts of the vending machine
  * @author Vance Gyan M. Robles
@@ -20,7 +18,6 @@ public class MainModel {
     /**
      * <p>Holds the test items for RegularVendingMachine.</p>
      */
-    private Item[] defaultItems = new Item[8];
     private ArrayList<Item> itemSamples = new ArrayList<Item>();
     private ArrayList<SpecialItem> customItemTemplates = new ArrayList<SpecialItem>();
     /**
@@ -66,12 +63,22 @@ public class MainModel {
         customItemTemplates.add(new SpecialItem("Halo-halo", 95.50,2, 1, 5));
     }
 
+    /**
+     * Creates a new regular vending machine using the provided item samples.
+     */
     public void createRegularVM(){
         currentVM = new RegularVendingMachine(itemSamples);
     }
 
+    /**
+     * Creates a new special vending machine using the provided item samples and custom item templates.
+     */
     public void createSpecialVM(){ currentVM = new SpecialVendingMachine(itemSamples, customItemTemplates); }
 
+    /**
+     * Checks if a vending machine has been created.
+     * @return True if a vending machine has been created, false otherwise.
+     */
     public boolean hasCreatedVM(){
         if (currentVM != null)
             return true;
@@ -79,6 +86,10 @@ public class MainModel {
         return false;
     }
 
+    /**
+     * Retrieves a list of item names from the item samples.
+     * @return An ArrayList containing the names of the items.
+     */
     public ArrayList<String> getItemNameList(){
 
         int i = 0;
@@ -91,6 +102,10 @@ public class MainModel {
         return itemNames;
     }
 
+    /**
+     * Retrieves a list of item prices from the purchasable item samples.
+     * @return An ArrayList containing the prices of the purchasable items.
+     */
     public ArrayList<Double> getItemPriceList(){
 
         int i = 0;
@@ -105,6 +120,10 @@ public class MainModel {
         return itemPrices;
     }
 
+    /**
+     * Retrieves a list of item calories from the item samples.
+     * @return An ArrayList containing the calories of the items.
+     */
     public ArrayList<Integer> getItemCalorieList(){
 
         int i = 0;
@@ -118,6 +137,10 @@ public class MainModel {
 
     }
 
+    /**
+     * Retrieves a list of item amounts available in the vending machine.
+     * @return An ArrayList containing the amounts of the items.
+     */
     public ArrayList<Integer> getItemAmountList(){
 
         int i = 0;
@@ -132,6 +155,10 @@ public class MainModel {
 
     }
 
+    /**
+     * Retrieves a list of custom item template names from the custom item templates.
+     * @return An ArrayList containing the names of the custom item templates.
+     */
     public ArrayList<String> getTemplateNames(){
 
         ArrayList<String> templateNames = new ArrayList<>();
@@ -142,6 +169,10 @@ public class MainModel {
         return templateNames;
     }
 
+    /**
+     * Retrieves a list of custom item template prices from the custom item templates.
+     * @return An ArrayList containing the prices of the custom item templates.
+     */
     public ArrayList<Double> getTemplatePrices(){
 
         ArrayList<Double> templatePrices = new ArrayList<>();
@@ -153,22 +184,46 @@ public class MainModel {
         return templatePrices;
     }
 
+    /**
+     * Retrieves the vending machine's history.
+     * @return An ArrayList containing the history records of the vending machine (String entries).
+     */
     public ArrayList<String> getMachineHistory(){
         return currentVM.getMachineHistory();
     }
 
+    /**
+     * Retrieves the price of an item at the specified index in the vending machine.
+     * @param index The index of the item.
+     * @return The price of the item.
+     */
     public double getItemPrice(int index){
         return currentVM.getItemPrice(index);
     }
 
+    /**
+     * Retrieves the stock amount of an item at the specified index in the vending machine.
+     * @param index The index of the item.
+     * @return The stock amount of the item.
+     */
     public int getItemStock(int index){
         return currentVM.getItemAmount(index);
     }
 
+    /**
+     * Changes the price of an item at the specified index in the vending machine.
+     * @param index The index of the item.
+     * @param newPrice The new price of the item.
+     */
     public void changeItemPrice(int index, double newPrice){
         currentManager.changeItemPrice(currentVM, index, newPrice);
     }
 
+    /**
+     * Adds one unit of stock to an item at the specified index in the vending machine.
+     * @param index The index of the item.
+     * @return True if the stock addition was successful, false otherwise.
+     */
     public boolean addItemStock(int index){
         if ((currentVM.getItemAmount(index) + 1) > 10){
             return false;
@@ -181,11 +236,19 @@ public class MainModel {
         }
     }
 
+    /**
+     * Withdraws all the funds from the vending machine.
+     * @return The total amount of funds withdrawn.
+     */
     public double withdrawAll(){
         double withdrawnFunds = currentManager.withdrawFunds(currentVM);
         return withdrawnFunds;
     }
 
+    /**
+     * Withdraws all the funds from the vending machine.
+     * @return The total amount of funds withdrawn.
+     */
     public ArrayList<String> getItemInformation(){
         ArrayList<String> itemInformation = new ArrayList<String>();
         for (int i = 0; i < itemSamples.size(); i++)
@@ -194,30 +257,63 @@ public class MainModel {
         return itemInformation;
     }
 
+    /**
+     * Retrieves information about the denominations in the vending machine's money storage.
+     * @return An ArrayList containing the amount of each denomination.
+     */
     public ArrayList<Integer> getMoneyInformation(){
         return currentVM.getDenominationAmounts();
     }
 
+    /**
+     * Retrieves the amount of a given denomination
+     * @param denomIndex The index of the denomination.
+     * @return The amount of the denomination.
+     */
     public int getDenomAmount(int denomIndex){
         return currentManager.getDenomAmt(currentVM, denomIndex);
     }
 
+    /**
+     * Adds a specified amount to a denomination
+     * @param denomIndex The index of the denomination.
+     * @param amountToAdd The amount to add to the denomination.
+     */
     public void addDenom(int denomIndex, int amountToAdd){
         currentManager.addDenominations(currentVM, denomIndex, amountToAdd);
     }
 
+    /**
+     * Adds a specified amount to the user's wallet.
+     * @param key The amount to add to the user's wallet.
+     */
     public void addToUserWallet(double key){
         currentCustomer.addCash(key);
     }
 
+    /**
+     * Resets the user's wallet by setting its balance to zero.
+     */
     public void resetUserWallet(){
         currentCustomer.resetWallet();
     }
 
+    /**
+     * Purchases an item at the specified index from the vending machine.
+     * @param itemIndex The index of the item to purchase.
+     * @return A message indicating the status of the purchase.
+     */
     public String purchaseItem(int itemIndex){
         return currentCustomer.purchaseItem(currentVM, itemIndex);
     }
 
+    /**
+     * Purchases a special item using the specified template index, base item indexes, and addon item indexes.
+     * @param templateIndex The index of the special item template to use.
+     * @param baseIndexes The indexes of the base items to use in the special item.
+     * @param addonIndexes The indexes of the addon items to use in the special item.
+     * @return A message indicating the status of the purchase.
+     */
     public String purchaseSpecialItem(int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
 
         String message = "";
@@ -233,6 +329,11 @@ public class MainModel {
 
     }
 
+    /**
+     * Checks if the user can purchase a special item with the specified template index.
+     * @param templateIndex The index of the special item template.
+     * @return True if the user can purchase the special item, false otherwise.
+     */
     public boolean canPurchaseSpecialItem(int templateIndex){
         if(currentCustomer.getUserWalletTotal() < customItemTemplates.get(templateIndex).getPrice())
             return false;
@@ -240,10 +341,18 @@ public class MainModel {
         return true;
     }
 
+    /**
+     * Retrieves the type of the current vending machine.
+     * @return The type of the current vending machine.
+     */
     public String getCurrentVMType(){
         return currentVM.getClass().getName();
     }
 
+    /**
+     * Retrieves the message for withdrawing cash (the machine returning the inserted cash to the user)
+     * @return The corresponding message containing denominations and their amounts
+     */
     public String getWithdrawMessage(){
         return currentCustomer.getWithdrawMessage();
     }

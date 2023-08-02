@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-
+/**
+ * GUI setup for the Special Vending Machine
+ * @author Vance Gyan M. Robles
+ */
 public class SpecialVendingView {
     private JFrame frame, receivedFrame, cashFrame;
     private JPanel itemPanel, dispensedItemPanel, keypadPanel, coinPanel;
@@ -408,16 +411,16 @@ public class SpecialVendingView {
                 JPanel noodlePanel = new JPanel(new GridLayout(1, 2, 20, 5));
                 addonPanel = new JPanel(new GridLayout(1, 4, 10, 5));
 
-                ImageIcon brothIcon1 = new ImageIcon(getClass().getResource("resources/items/item1.png"));
-                ImageIcon brothIcon2 = new ImageIcon(getClass().getResource("resources/items/item1.png"));
-                ImageIcon brothIcon3 = new ImageIcon(getClass().getResource("resources/items/item1.png"));
-                ImageIcon brothIcon4 = new ImageIcon(getClass().getResource("resources/items/item1.png"));
+                ImageIcon brothIcon1 = new ImageIcon(getClass().getResource("resources/addons/shiobroth.png"));
+                ImageIcon brothIcon2 = new ImageIcon(getClass().getResource("resources/addons/misobroth.png"));
+                ImageIcon brothIcon3 = new ImageIcon(getClass().getResource("resources/addons/ukkokeibroth.png"));
+                ImageIcon brothIcon4 = new ImageIcon(getClass().getResource("resources/addons/tonkotsubroth.png"));
                 ImageIcon noodleIcon1 = new ImageIcon(getClass().getResource("resources/items/item5.png"));
                 ImageIcon noodleIcon2 = new ImageIcon(getClass().getResource("resources/items/item6.png"));
                 ImageIcon toppingIcon1 = new ImageIcon(getClass().getResource("resources/items/item8.png"));
                 ImageIcon toppingIcon2 = new ImageIcon(getClass().getResource("resources/items/item9.png"));
-                ImageIcon toppingIcon3 = new ImageIcon(getClass().getResource("resources/items/item1.png"));
-                ImageIcon toppingIcon4 = new ImageIcon(getClass().getResource("resources/items/item1.png"));
+                ImageIcon toppingIcon3 = new ImageIcon(getClass().getResource("resources/addons/saltedegg.png"));
+                ImageIcon toppingIcon4 = new ImageIcon(getClass().getResource("resources/addons/chickenslices.png"));
 
                 JButton shioBroth = new JButton(brothIcon1);
                 shioBroth.setToolTipText("Shio Broth");
@@ -1079,12 +1082,12 @@ public class SpecialVendingView {
                 // Middle Panel(s)
                 addonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
 
-                ImageIcon addonIcon1 = new ImageIcon(getClass().getResource("resources/addons/bacon.png"));
-                ImageIcon addonIcon2 = new ImageIcon(getClass().getResource("resources/addons/tapa.png"));
-                ImageIcon addonIcon3 = new ImageIcon(getClass().getResource("resources/addons/tocino.png"));
-                ImageIcon addonIcon4 = new ImageIcon(getClass().getResource("resources/addons/tocino.png"));
-                ImageIcon addonIcon5 = new ImageIcon(getClass().getResource("resources/addons/tocino.png"));
-                ImageIcon addonIcon6 = new ImageIcon(getClass().getResource("resources/addons/tocino.png"));
+                ImageIcon addonIcon1 = new ImageIcon(getClass().getResource("resources/addons/nuts.png"));
+                ImageIcon addonIcon2 = new ImageIcon(getClass().getResource("resources/addons/natadecoco.png"));
+                ImageIcon addonIcon3 = new ImageIcon(getClass().getResource("resources/addons/macapuno.png"));
+                ImageIcon addonIcon4 = new ImageIcon(getClass().getResource("resources/addons/lecheflan.png"));
+                ImageIcon addonIcon5 = new ImageIcon(getClass().getResource("resources/addons/bananaslices.png"));
+                ImageIcon addonIcon6 = new ImageIcon(getClass().getResource("resources/addons/langka.png"));
 
                 JButton nuts = new JButton(addonIcon1);
                 nuts.setToolTipText("Nuts");

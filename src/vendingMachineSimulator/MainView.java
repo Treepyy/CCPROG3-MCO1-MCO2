@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * GUI setup for the machine setup
+ * @author Vance Gyan M. Robles
+ */
 public class MainView {
 
     private JFrame mainFrame, errorFrame, vendingFrame;

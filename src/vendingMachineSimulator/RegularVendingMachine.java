@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * A regular vending machine, can hold up to 8 item slots with a max capacity of 10 each. Supports denomination management through a Wallet and machine history recording.
+ * A regular vending machine, can hold up to 40 item slots with a max capacity of 10 each. Supports denomination management through a Wallet and machine history recording.
  * @author Vance Gyan M. Robles
  */
 public class RegularVendingMachine {
@@ -17,7 +17,7 @@ public class RegularVendingMachine {
      * <p>Holds the items available for purchase.</p>
      */
     protected Deque<Item>[] itemSlots = new LinkedList[maxItemSlots];
-    // private Item[][] itemSlots = new Item[maxItemSlots][maxItemSlotCapacity];
+
     /**
      * <p>Wallet which holds the funds of the machine.</p>
      */
@@ -141,7 +141,7 @@ public class RegularVendingMachine {
     public void subtractFunds(double cash){ machineWallet.subtractCash(cash); }
 
     /**
-     * <p>Dispenses an item from the machine given its index (decrements its amount value by 1 and displays a received message)</p>
+     * <p>Dispenses an item from the machine given its index (pops the corresponding item in the item stack)</p>
      *
      * @param itemIndex the index of the item to be dispensed
      */
@@ -152,7 +152,7 @@ public class RegularVendingMachine {
     }
 
     /**
-     * <p>Adds a given amount of items into the item slot</p>
+     * <p>Adds a given amount of items into the item slot (pushes the item into the stack)</p>
      *
      * @param itemIndex the index of the item to be restocked
      * @param addedAmount the amount of items to be added
@@ -318,6 +318,12 @@ public class RegularVendingMachine {
         return output;
     }
 
+    /**
+     * Determines if the given item in the itemIndex is purchasable or not
+     *
+     * @param itemIndex is the index of the item to get
+     * @return the isPurchasable boolean value of the item
+     */
     public boolean isItemPurchasable(int itemIndex){
         return itemSamples.get(itemIndex).isPurchasable();
     }

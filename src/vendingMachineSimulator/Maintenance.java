@@ -91,6 +91,12 @@ public class Maintenance {
         return keyChoice;
     }
 
+    /**
+     * Gets the amount of a denomination currently in the vending machine.
+     * @param currentVM is the vending machine to search
+     * @param choiceIndex is the denomination type's index to get the amount for
+     * @return the amount of specified denominations in the machine
+     */
     public int getDenomAmt(RegularVendingMachine currentVM, int choiceIndex){
         return currentVM.getDenominationAmount(convertToKey(choiceIndex));
     }
