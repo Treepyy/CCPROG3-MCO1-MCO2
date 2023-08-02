@@ -311,7 +311,7 @@ public class MainController {
                     vendingView.displayRegularGUI(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
                 }
                 else {
-                    specialVendingView.displaySpecialGUI(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList(), mainModel.getTemplateNames());
+                    specialVendingView.displaySpecialGUI(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList(), mainModel.getTemplateNames(), mainModel.getTemplatePrices());
                 }
 
             }
@@ -399,7 +399,7 @@ public class MainController {
                 String withdrawMessage = mainModel.getWithdrawMessage();
                 String message = "";
 
-                if (specialVendingView.getNumberInput() < 10){
+                if (specialVendingView.getNumberInput() < 10 && specialVendingView.getNumberInput() > 0){
 
                     message = mainModel.purchaseItem(specialVendingView.getNumberInput()-1);
 
@@ -422,7 +422,10 @@ public class MainController {
                 }
 
                 else if (specialVendingView.getNumberInput() >= 10 && specialVendingView.getNumberInput() < 13){
-                    specialVendingView.displayCustomizeMenu(specialVendingView.getNumberInput() - 10);
+                    if (mainModel.canPurchaseSpecialItem(specialVendingView.getNumberInput() - 10))
+                        specialVendingView.displayCustomizeMenu(specialVendingView.getNumberInput() - 10);
+                    else
+                        specialVendingView.displayError("INSUFFICIENT FUNDS");
 
                 }
                 else {
@@ -435,27 +438,130 @@ public class MainController {
             }
         });
 
-
-        this.specialVendingView.setConfirmCustomizedButtonListener(new ActionListener() {
+        this.specialVendingView.setConfirmRamenButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String withdrawMessage = mainModel.getWithdrawMessage();
+                String message = "";
 
                 if (specialVendingView.getSelectedBaseIndexes().size() == 0 || specialVendingView.getSelectedAddonIndexes().size() == 0){
-
+                    System.out.println("Halo-halo");
                 }
                 else {
+
                     for (int i : specialVendingView.getSelectedBaseIndexes()){
                         System.out.println(i);
                     }
                     for (int i : specialVendingView.getSelectedAddonIndexes()){
                         System.out.println(i);
                     }
+
+                    System.out.println("Selected: " + (specialVendingView.getNumberInput() - 10));
+                    message = mainModel.purchaseSpecialItem(specialVendingView.getNumberInput() - 10, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
+                    System.out.println(message);
+
+                    if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
+                        specialVendingView.displayErrorWithdraw(message);
+                        if (!withdrawMessage.equals(""))
+                            specialVendingView.returnInsertedMoney(withdrawMessage);
+                    }
+                    else if (Objects.equals(message, "INVALID NUMBER") || Objects.equals(message, "OUT OF STOCK")){
+                        specialVendingView.displayError(message);
+                    }
+                    else {
+                        specialVendingView.prepareRamen(message);
+                    }
+
+                    updateVendingViewInformation();
+
                 }
-
-
-                System.out.println("Ping!");
             }
         });
+
+        this.specialVendingView.setConfirmSilogButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String withdrawMessage = mainModel.getWithdrawMessage();
+                String message = "";
+
+                if (specialVendingView.getSelectedBaseIndexes().size() == 0 || specialVendingView.getSelectedAddonIndexes().size() == 0){
+                    System.out.println("Silog");
+                }
+                else {
+
+                    for (int i : specialVendingView.getSelectedBaseIndexes()){
+                        System.out.println(i);
+                    }
+                    for (int i : specialVendingView.getSelectedAddonIndexes()){
+                        System.out.println(i);
+                    }
+
+                    System.out.println("Selected: " + (specialVendingView.getNumberInput() - 10));
+                    message = mainModel.purchaseSpecialItem(specialVendingView.getNumberInput() - 10, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
+                    System.out.println(message);
+
+                    if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
+                        specialVendingView.displayErrorWithdraw(message);
+                        if (!withdrawMessage.equals(""))
+                            specialVendingView.returnInsertedMoney(withdrawMessage);
+                    }
+                    else if (Objects.equals(message, "INVALID NUMBER") || Objects.equals(message, "OUT OF STOCK")){
+                        specialVendingView.displayError(message);
+                    }
+                    else {
+                        System.out.println(message);
+                        specialVendingView.prepareSilog(message);
+                    }
+
+                    updateVendingViewInformation();
+
+
+                }
+            }
+        });
+
+        this.specialVendingView.setConfirmHaloHaloButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String withdrawMessage = mainModel.getWithdrawMessage();
+                String message = "";
+
+                if (specialVendingView.getSelectedBaseIndexes().size() == 0 || specialVendingView.getSelectedAddonIndexes().size() == 0){
+                    System.out.println("Halo-halo");
+                }
+                else {
+
+                    for (int i : specialVendingView.getSelectedBaseIndexes()){
+                        System.out.println(i);
+                    }
+                    for (int i : specialVendingView.getSelectedAddonIndexes()){
+                        System.out.println(i);
+                    }
+
+                    System.out.println("Selected: " + (specialVendingView.getNumberInput() - 10));
+                    message = mainModel.purchaseSpecialItem(specialVendingView.getNumberInput() - 10, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
+                    System.out.println(message);
+
+                    if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
+                        specialVendingView.displayErrorWithdraw(message);
+                        if (!withdrawMessage.equals(""))
+                            specialVendingView.returnInsertedMoney(withdrawMessage);
+                    }
+                    else if (Objects.equals(message, "INVALID NUMBER") || Objects.equals(message, "OUT OF STOCK")){
+                        specialVendingView.displayError(message);
+                    }
+                    else {
+                        System.out.println(message);
+                        specialVendingView.prepareHaloHalo(message);
+                    }
+
+                    updateVendingViewInformation();
+
+
+                }
+            }
+        });
+
 
         this.specialVendingView.setGetButtonListener(new ActionListener() {
             @Override
@@ -467,6 +573,7 @@ public class MainController {
         this.specialVendingView.setCashInsertButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 if (createdSpecialCashPanel)
                     specialVendingView.displayCashGUI();
                 else{
@@ -527,6 +634,6 @@ public class MainController {
         if (Objects.equals(currentType, "Regular"))
             vendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
         else
-            specialVendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList());
+            specialVendingView.updateItemInformation(mainModel.getItemNameList(), mainModel.getItemPriceList(), mainModel.getItemCalorieList(), mainModel.getItemAmountList(), mainModel.getTemplatePrices());
     }
 }

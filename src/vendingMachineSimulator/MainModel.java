@@ -8,15 +8,11 @@ import java.util.TreeMap;
 // TODO: Convert item amount to instantiation (not set number), implement SpecialVendingMachine and SpecialItem, ~~finish addDemon~~,
 
 /**
- * Serves as the main hub to access the two main features of the Vending Machine simulator.
+ * Serves as the main model to interact with the different parts of the vending machine
  * @author Vance Gyan M. Robles
  */
 public class MainModel {
 
-    /**
-     * <p>Scanner for getting user inputs.</p>
-     */
-    private Scanner input = new Scanner(System.in);
     /**
      * <p>The current vending machine to be tested/used.</p>
      */
@@ -53,19 +49,21 @@ public class MainModel {
         itemSamples.add(new Item("Salted Egg", 62, 26.00, false));
         itemSamples.add(new Item("Fried Egg", 67, 21.00, false));
         itemSamples.add(new Item("Chicken Slices", 256, 45.00, false));
-        itemSamples.add(new Item("Ham", 227, 34.00, false));
+        itemSamples.add(new Item("Coconut Milk", 227, 34.00, false));
         itemSamples.add(new Item("Bacon", 283, 42.00, false));
         itemSamples.add(new Item("Tapa", 212, 41.00, false));
         itemSamples.add(new Item("Tocino", 221, 38.00, false));
         itemSamples.add(new Item("Nuts", 85, 10.00, false));
-        itemSamples.add(new Item("Nata de coco", 120, 12.00, false));
+        itemSamples.add(new Item("Nata de Coco", 120, 12.00, false));
         itemSamples.add(new Item("Macapuno", 137, 12.00, false));
         itemSamples.add(new Item("Leche Flan", 211, 15.00, false));
         itemSamples.add(new Item("Banana Slices", 89, 10.00, false));
+        itemSamples.add(new Item("Langka", 167, 10.00, false));
+        itemSamples.add(new Item("Black Garlic Oil", 69, 5.00, false));
 
-        customItemTemplates.add(new SpecialItem("Ramen",2, 1, 3));
-        customItemTemplates.add(new SpecialItem("Silog Meal",2, 1, 2));
-        customItemTemplates.add(new SpecialItem("Halo-halo",2, 1, 5));
+        customItemTemplates.add(new SpecialItem("Ramen", 380.00,2, 1, 3));
+        customItemTemplates.add(new SpecialItem("Silog Meal", 105.00,2, 1, 2));
+        customItemTemplates.add(new SpecialItem("Halo-halo", 95.50,2, 1, 5));
     }
 
     public void createRegularVM(){
@@ -144,6 +142,17 @@ public class MainModel {
         return templateNames;
     }
 
+    public ArrayList<Double> getTemplatePrices(){
+
+        ArrayList<Double> templatePrices = new ArrayList<>();
+
+        for (Item template : customItemTemplates){
+            templatePrices.add(template.getPrice());
+        }
+
+        return templatePrices;
+    }
+
     public ArrayList<String> getMachineHistory(){
         return currentVM.getMachineHistory();
     }
@@ -209,13 +218,26 @@ public class MainModel {
         return currentCustomer.purchaseItem(currentVM, itemIndex);
     }
 
-    public String purchaseSpecialItem(int templateIndex, TreeMap<Double, Integer> insertedCashDenominationsAmount){
+    public String purchaseSpecialItem(int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
 
         String message = "";
-        currentCustomer = new Customer();
+
+        if (customItemTemplates.get(templateIndex) == null){
+            message = "INVALID NUMBER";
+        }
+        else {
+            message =  currentCustomer.purchaseSpecialItem((SpecialVendingMachine) currentVM, templateIndex, baseIndexes, addonIndexes);
+        }
 
         return message;
 
+    }
+
+    public boolean canPurchaseSpecialItem(int templateIndex){
+        if(currentCustomer.getUserWalletTotal() < customItemTemplates.get(templateIndex).getPrice())
+            return false;
+
+        return true;
     }
 
     public String getCurrentVMType(){

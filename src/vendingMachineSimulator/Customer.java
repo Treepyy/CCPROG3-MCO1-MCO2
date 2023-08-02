@@ -3,7 +3,7 @@ package vendingMachineSimulator;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.HashMap;
 
 /**
  * Responsible for buying items from a Vending Machine using its own denominations.
@@ -118,6 +118,7 @@ public class Customer {
 
     public String purchaseItem(RegularVendingMachine current, int itemIndex){
 
+        System.out.println("TOTAL IN WALLET: " + userWallet.getTotal());
         double currentAmount = userWallet.getTotal();
         if (current.getItemAmount(itemIndex) == 0){ // Checks if the item amount is greater than 0, if not, returns an error message
 
@@ -157,10 +158,78 @@ public class Customer {
         }
     }
 
-    public void purchaseSpecialItem(RegularVendingMachine current, int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
+    public String purchaseSpecialItem(SpecialVendingMachine currentSP, int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
 
-        SpecialVendingMachine currentSP = (SpecialVendingMachine)current;
-        currentSP.createCustomItem(templateIndex, baseIndexes, addonIndexes);
+        System.out.println("TOTAL IN WALLET: " + userWallet.getTotal());
+        // checks if there is enough stock for the selected items
+        boolean hasEnoughStock = true;
+        HashMap<Integer, Integer> requiredItems = new HashMap<>(); // Keep track of required items and their count
+
+        for (int index : baseIndexes){
+            int requiredAmount = requiredItems.getOrDefault(index, 0) + 1;
+            requiredItems.put(index, requiredAmount);
+        }
+
+        for (int index : addonIndexes){
+            int requiredAmount = requiredItems.getOrDefault(index, 0) + 1;
+            requiredItems.put(index, requiredAmount);
+        }
+
+        for (int index : requiredItems.keySet()){
+            int requiredAmount = requiredItems.get(index);
+            int availableAmount = currentSP.getItemAmount(index);
+
+            if (requiredAmount > availableAmount){
+                hasEnoughStock = false;
+                break; // stops checking if one item is out of stock
+            }
+        }
+
+        for (HashMap.Entry<Integer, Integer> entry : requiredItems.entrySet()) {
+            int key = entry.getKey();
+            int value = entry.getValue();
+            System.out.println("Key: " + key + ", Value: " + value);
+        }
+        System.out.println("Has enough stock: " + hasEnoughStock);
+
+        if (hasEnoughStock){
+
+            double currentAmount = userWallet.getTotal();
+            double change = userWallet.getTotal() - currentSP.getItemTemplatePrice(templateIndex);
+            currentSP.addFunds(userWallet);
+            if (change >= 0 && currentSP.hasEnoughDenominations(userWallet.convertToDenominations(change))){
+
+                // If the machine has enough denominations to provide the change, continues.
+                // The special item is CREATED, its ingredients are dispensed from the machine, and the change (in denominations) are subtracted from the machine and is given to the user.
+                currentSP.createCustomItem(templateIndex, baseIndexes, addonIndexes);
+                currentSP.subtractFunds(change);
+
+                // The userWallet is reset for the next cycle, and a record will be added to the vending machine's purchase history.
+                userWallet.resetWallet();
+                currentSP.updateSpecialPurchaseHistory(currentAmount, templateIndex, change, baseIndexes, addonIndexes);
+
+                return currentSP.displayReceivedChangeMessage(change);
+            }
+            else if (change >= 0 && !currentSP.hasEnoughDenominations(userWallet.convertToDenominations(change))){
+                // If the machine does NOT have enough denominations to provide the change, displays an error and the denominations are returned
+                currentSP.subtractFunds(userWallet);
+                userWallet.withdrawAll();
+                return  "CAN'T GET CHANGE";
+            }
+            else{
+                // Else, if the change value reaches a negative number, displays an insufficient funds message
+                System.out.println("Change: " + change);
+                currentSP.subtractFunds(userWallet);
+                userWallet.withdrawAll();
+                return "INSUFFICIENT FUNDS";
+            }
+
+        }
+
+        else {
+            return "OUT OF STOCK";
+        }
+
 
     }
 
@@ -204,6 +273,10 @@ public class Customer {
     public void resetWallet(){
         userWallet.resetWallet();
         System.out.println("Current Total: " + userWallet.getTotal());
+    }
+
+    public double getUserWalletTotal(){
+        return userWallet.getTotal();
     }
 
 }

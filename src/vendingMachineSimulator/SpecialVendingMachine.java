@@ -11,43 +11,34 @@ public class SpecialVendingMachine extends RegularVendingMachine {
         this.specialItemTemplates = specialItemTemplates;
     }
 
-    // returns true if item creation was successful
-    public boolean createCustomItem(int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
+    public SpecialItem createCustomItem(int templateIndex, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
 
         SpecialItem customItem = specialItemTemplates.get(templateIndex).clone();
 
         for (int i : baseIndexes){
-
-            if(getItemAmount(i) == 0){
-                return false;
-            }
-
-            else{
-                customItem.addBase(itemSamples.get(i));
-                itemSlots[i].pop();
-            }
-
+            customItem.addBase(itemSamples.get(i));
+            dispenseItem(i);
         }
 
         for (int i : addonIndexes){
-
-            if(getItemAmount(i) == 0){
-                return false;
-            }
-
-            else {
-                customItem.addAddon(itemSamples.get(i));
-                itemSlots[i].pop();
-            }
-
+            customItem.addAddon(itemSamples.get(i));
+            dispenseItem(i);
         }
 
-        return true;
+        return customItem;
     }
 
     public String dispenseItem(ArrayList<String> preparationMessages){
 
         return null;
+    }
+
+    public double getItemTemplatePrice(int index){
+        return this.specialItemTemplates.get(index).getPrice();
+    }
+
+    public void updateSpecialPurchaseHistory(double insertedCash, int templateIndex,  double change, ArrayList<Integer> baseIndexes, ArrayList<Integer> addonIndexes){
+
     }
 
 }

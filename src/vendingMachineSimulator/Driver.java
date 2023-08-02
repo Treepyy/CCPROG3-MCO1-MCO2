@@ -16,11 +16,11 @@ public class Driver {
 
         /* TODO:
             finish special vending machine GUI for the other 2 special item types,
-            implement purchasing of special item in model,
-            set customizable items to set price instead of summation,
-            convert SpecialVendingView to extended class of VendingView
             test script (model only)
-            UML (model only) */
+            UML (model only)
+
+            ~~implement purchasing of special item in model,~~ -> debugging
+            ~~set customizable items to set price instead of summation,~~ */
     }
 
 }
