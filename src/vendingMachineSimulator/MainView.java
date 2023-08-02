@@ -2,6 +2,7 @@ package vendingMachineSimulator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class MainView {
         this.welcomelbl = new JLabel("Welcome!");
         this.feedbackLbl = new JLabel();
         this.feedbackLbl.setHorizontalAlignment(SwingConstants.CENTER);
-        this.feedbackLbl.setPreferredSize(new Dimension(220, 30));
+        this.feedbackLbl.setPreferredSize(new Dimension(300, 30));
 
         this.createBtn = new JButton("Create a Vending Machine");
         this.createBtn.setPreferredSize(new Dimension(220, 30));
@@ -493,46 +494,53 @@ public class MainView {
     public void displayItemInventory(){
         // display inventory in table format, add button for toggling between item and money inventory
 
-        this.mainFrame.getContentPane().removeAll();
-        this.mainFrame.getContentPane().repaint();
-        this.panel.removeAll();
-        this.panel.add(new JLabel("Inventory"));
-        this.mainFrame.add(panel);
-        this.mainFrame.add(displayItemsBtn);
-        this.mainFrame.add(displayMoneyBtn);
-        this.mainFrame.add(scrollPane);
-        this.mainFrame.add(moneyTable, BorderLayout.CENTER);
-        this.mainFrame.add(itemTable, BorderLayout.CENTER);
+        JFrame inventory = new JFrame("Item Inventory");
+        inventory.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        inventory.setSize(600,600);
+
+        JPanel invPanel = new JPanel(new FlowLayout());
+        invPanel.add(scrollPane);
+        invPanel.add(itemTable, BorderLayout.CENTER);
+        invPanel.add(moneyTable, BorderLayout.CENTER);
+
+        JButton switchButton = new JButton("Switch Inventory");
+        switchButton.setPreferredSize(new Dimension(150, 30));
+        invPanel.add(switchButton, BorderLayout.CENTER);
+        final String[] currentInv = {"Items"};
+        switchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (currentInv[0] == "Items"){
+                    scrollPane.setViewportView(moneyTable);
+                    scrollPane.setVisible(true);
+                    itemTable.setVisible(false);
+                    moneyTable.setVisible(true);
+                    currentInv[0] = "Money";
+                }
+                else {
+                    scrollPane.setViewportView(itemTable);
+                    scrollPane.setVisible(true);
+                    itemTable.setVisible(true);
+                    moneyTable.setVisible(false);
+                    currentInv[0] = "Items";
+                }
+            }
+        });
+
         this.scrollPane.setViewportView(itemTable);
         this.scrollPane.setVisible(true);
         this.itemTable.setVisible(true);
         this.moneyTable.setVisible(false);
-        this.mainFrame.add(optionReturnBtn);
-        this.mainFrame.validate();
+
+        inventory.add(invPanel);
+        inventory.validate();
+        inventory.setVisible(true);
+
     }
 
     public void addItemInformation(String itemName, String quantity, String price, String calories) {
         // Add a new row to the table with the given information
         this.itemTableModel.addRow(new Object[]{itemName, quantity, price, calories});
-    }
-
-    public void displayMoneyInventory(){
-        this.mainFrame.getContentPane().removeAll();
-        this.mainFrame.getContentPane().repaint();
-        this.panel.removeAll();
-        this.panel.add(new JLabel("Inventory"));
-        this.mainFrame.add(panel);
-        this.mainFrame.add(displayItemsBtn);
-        this.mainFrame.add(displayMoneyBtn);
-        this.mainFrame.add(scrollPane);
-        this.mainFrame.add(itemTable, BorderLayout.CENTER);
-        this.mainFrame.add(moneyTable, BorderLayout.CENTER);
-        this.scrollPane.setViewportView(moneyTable);
-        this.scrollPane.setVisible(true);
-        this.itemTable.setVisible(false);
-        this.moneyTable.setVisible(true);
-        this.mainFrame.add(optionReturnBtn);
-        this.mainFrame.validate();
     }
 
     public void addMoneyInformation(ArrayList<Integer> amountInformation){

@@ -61,7 +61,7 @@ public class MainController {
             public void actionPerformed(ActionEvent e) {
                 if (!mainModel.hasCreatedVM()){
                     mainModel.createRegularVM();
-                    mainView.displayFeedback("Successfully created a Regular Vending Machine!", Color.GREEN);
+                    mainView.displayFeedback("Created New Regular Vending Machine!", Color.GREEN);
                     currentType = "Regular";
                 }
                 else{
@@ -84,7 +84,7 @@ public class MainController {
                     currentType = "Special";
                 }
                 mainView.closeErrorFrame();
-                mainView.displayFeedback("Successfully created a " + type + " Vending Machine!", Color.GREEN);
+                mainView.displayFeedback("Created New " + type + " Vending Machine!", Color.GREEN);
             }
         });
 
@@ -101,7 +101,7 @@ public class MainController {
             public void actionPerformed(ActionEvent e) {
                 if (!mainModel.hasCreatedVM()){
                     mainModel.createSpecialVM();
-                    mainView.displayFeedback("Successfully created a Special Vending Machine!", Color.GREEN);
+                    mainView.displayFeedback("Created New Special Vending Machine!", Color.GREEN);
                     currentType = "Special";
                 }
                 else{
@@ -247,6 +247,7 @@ public class MainController {
             public void actionPerformed(ActionEvent e) {
                 mainView.clearTables();
                 addItemTableInformation();
+                mainView.addMoneyInformation(mainModel.getMoneyInformation());
                 mainView.displayItemInventory();
             }
         });
@@ -256,16 +257,8 @@ public class MainController {
             public void actionPerformed(ActionEvent e) {
                 mainView.clearTables();
                 addItemTableInformation();
-                mainView.displayItemInventory();
-            }
-        });
-
-        this.mainView.setDisplayMoneyBtnListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainView.clearTables();
                 mainView.addMoneyInformation(mainModel.getMoneyInformation());
-                mainView.displayMoneyInventory();
+                mainView.displayItemInventory();
             }
         });
 

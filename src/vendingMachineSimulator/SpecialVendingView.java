@@ -246,6 +246,12 @@ public class SpecialVendingView {
 
             // Clears previous label
             itemPanel.removeAll();
+            String[] specialItemToolips = {
+                    "<html>" + "Contents:" + "<br>" + "1x Broth" + "<br>" + "1x Noodles" + "<br>" + "1-3x Addons" + "<br>" + "1x Black Garlic Oil" + "</html>",
+                    "<html>" + "Contents:" + "<br>" + "1x Rice" + "<br>" + "1x Fried Egg"  + "<br>" + "1-2x Ulam" + "</html>",
+                    "<html>" + "Contents:" + "<br>" + "1x Ube Ice Cream" + "<br>" + "1x Coconut Milk"  + "<br>" + "1-5x Addons" + "</html>"
+            };
+            int currentSpecial = 0;
 
             // Add items to the item panel (regular items)
             for (int i = 1; i <= 12; i++) {
@@ -284,6 +290,7 @@ public class SpecialVendingView {
                 }
                 else { // Adds customizable/special items to the item panel
                     JLabel itemLabel = new JLabel(icon);
+                    itemLabel.setToolTipText(specialItemToolips[currentSpecial]);
                     JLabel nameLabel = new JLabel(templateNames.get(i - 10), SwingConstants.CENTER);
                     JLabel numberLabel = new JLabel("[" + i + "]", SwingConstants.CENTER);
                     JLabel stockLabel = new JLabel("Customizable", SwingConstants.CENTER);
@@ -299,6 +306,7 @@ public class SpecialVendingView {
                     labelPanel.add(priceLabel);
                     itemContainer.add(labelPanel, BorderLayout.SOUTH);
                     itemPanel.add(itemContainer);
+                    currentSpecial++;
                 }
 
             }
