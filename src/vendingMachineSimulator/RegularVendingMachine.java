@@ -263,7 +263,9 @@ public class RegularVendingMachine {
     }
 
     /**
-     * <p>Displays the inventory of the machine (products and denominations currently in the wallet)</p>
+     * <p>Gets the list containing the denomination amounts for each type in the machine wallet</p>
+     *
+     * @return ArrayList containing the denomination amounts
      */
     public ArrayList<Integer> getDenominationAmounts(){
 
@@ -277,6 +279,11 @@ public class RegularVendingMachine {
 
     }
 
+    /**
+     * <p>Gets the list containing the machine history records</p>
+     *
+     * @return ArrayList containing the machine history records
+     */
     public ArrayList<String> getMachineHistory(){
         return machineHistory;
     }

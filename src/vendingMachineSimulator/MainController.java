@@ -290,7 +290,6 @@ public class MainController {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                // "Test Vending Features" option should be disabled while a vending machine window is open, re-enable it only once the current vending machine instance has been closed.
                 System.out.println(mainModel.getCurrentVMType());
                 try {
                     if(Objects.equals(currentType, "Regular")){

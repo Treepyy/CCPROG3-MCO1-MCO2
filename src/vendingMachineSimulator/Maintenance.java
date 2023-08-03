@@ -13,6 +13,8 @@ public class Maintenance {
      * <p>Allows the user to add to the amount of items in the vending machine</p>
      *
      * @param currentVM is the vending machine to be used
+     * @param index is the index of the item to add
+     * @param itemsToAdd is the number of items to add
      */
     public void addItems(RegularVendingMachine currentVM, int index, int itemsToAdd){
         int previousStock = currentVM.getItemAmount(index);
@@ -20,9 +22,11 @@ public class Maintenance {
         currentVM.updateStockHistory(index, itemsToAdd, previousStock);
     }
     /**
-     * <p>Allows the user to add to change the price of an item in the vending machine.</p>
+     * <p>Allows the user to change the price of an item in the vending machine.</p>
      *
      * @param currentVM is the vending machine to be used
+     * @param index is the index of the item to be modified
+     * @param newPrice is the new price of the item
      */
     public void changeItemPrice(RegularVendingMachine currentVM, int index, double newPrice){
         double oldPrice = currentVM.getItemPrice(index);
@@ -35,6 +39,7 @@ public class Maintenance {
      * <p>Allows the user to withdraw all the funds in the vending machine (inside the machineWallet)</p>
      *
      * @param currentVM is the vending machine to be used
+     * @return double value corresponding to the amount
      */
     public double withdrawFunds(RegularVendingMachine currentVM){
         if (currentVM.getCurrentFunds() == 0){
@@ -52,6 +57,8 @@ public class Maintenance {
      * <p>Allows the user to add any amount of any valid denomination into the machine</p>
      *
      * @param currentVM is the vending machine to be used
+     * @param denomIndex is the index of the denomination to add
+     * @param amountToAdd is the amount to add
      */
     public void addDenominations(RegularVendingMachine currentVM, int denomIndex, int amountToAdd){
         double keyChoice = convertToKey(denomIndex);

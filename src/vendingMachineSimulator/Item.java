@@ -20,6 +20,9 @@ public class Item {
      */
     protected double price;
 
+    /**
+     * <p>Determines if the item can be purchased (on its own) or not</p>
+     */
     protected boolean isPurchasable;
 
     /**
@@ -28,6 +31,7 @@ public class Item {
      * @param name     the name of the item
      * @param calories the number of calories in the item
      * @param price    the price of the item
+     * @param isPurchasable boolean value determining if the item can be purchased (on its own) or not
      */
     public Item(String name, int calories, double price, boolean isPurchasable) {
         this.name = name;

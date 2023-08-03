@@ -33,6 +33,9 @@ public class VendingView {
     // Path to the directory containing the item/cash images
     private static final String IMAGE_DIRECTORY_PATH = "resources/";
 
+    /**
+     * Constructs a new VendingView object.
+     */
     public VendingView() {
         this.confirmButton = new JButton();
         this.getButton = new JButton();
@@ -72,6 +75,14 @@ public class VendingView {
 
     }
 
+    /**
+     * Updates the information of items displayed in the vending machine.
+     *
+     * @param itemNames     ArrayList of item names.
+     * @param itemPrices    ArrayList of item prices.
+     * @param itemCalories  ArrayList of item calories.
+     * @param itemAmounts   ArrayList of item stock amounts.
+     */
     public void updateItemInformation(ArrayList<String> itemNames, ArrayList<Double> itemPrices, ArrayList<Integer> itemCalories, ArrayList<Integer> itemAmounts){
         this.itemNames = itemNames;
         this.itemPrices = itemPrices;
@@ -87,6 +98,14 @@ public class VendingView {
         }
     }
 
+    /**
+     * Displays the Regular Vending Machine GUI.
+     *
+     * @param itemNames     ArrayList of item names.
+     * @param itemPrices    ArrayList of item prices.
+     * @param itemCalories  ArrayList of item calories.
+     * @param itemAmounts   ArrayList of item stock amounts.
+     */
     public void displayRegularGUI(ArrayList<String> itemNames, ArrayList<Double> itemPrices, ArrayList<Integer> itemCalories, ArrayList<Integer> itemAmounts) {
 
         this.itemNames = itemNames;
@@ -166,6 +185,9 @@ public class VendingView {
         amountLabel.setText("₱0.00");
     }
 
+    /**
+     * Creates the GUI for the cash insertion interface.
+     */
     public void createCashGUI() {
 
         // Create the panel for coin buttons
@@ -226,10 +248,16 @@ public class VendingView {
         this.cashFrame.setVisible(true);
     }
 
+    /**
+     * Displays the cash insertion GUI.
+     */
     public void displayCashGUI(){
         this.cashFrame.setVisible(true);
     }
 
+    /**
+     * Updates the label displaying the current amount of cash inserted.
+     */
     private void updateAmountLabel() {
         this.amountLabel.setText("₱" + String.format("%.2f", currentAmount));
         keypadPanel.revalidate();
@@ -238,6 +266,9 @@ public class VendingView {
         cashFrame.repaint();
     }
 
+    /**
+     * Updates the item panel with the latest item information.
+     */
     private void updateItemPanel(){
 
         try{
@@ -287,10 +318,10 @@ public class VendingView {
         }
     }
 
-    public void updateChangeDenomLabel(){
-
-    }
-
+    /**
+     * ActionListener implementation for cash insert buttons. Updates the current amount,
+     * updates the last pressed value, and calls the updateAmountLabel() method.
+     */
     private class CashButtonListener implements ActionListener {
         private double value;
 
@@ -306,27 +337,51 @@ public class VendingView {
         }
     }
 
+    /**
+     * Updates the last pressed value when a coin/bill button is clicked.
+     *
+     * @param value The value of the coin/bill pressed.
+     */
     public void updateLastPressedValue(double value){
         this.lastPressedValue = value;
         System.out.println(lastPressedValue);
     }
 
+    /**
+     * Retrieves the last pressed coin/bill value.
+     *
+     * @return The value of the last pressed coin/bill.
+     */
     public double getLastPressedValue(){
         return lastPressedValue;
     }
 
+    /**
+     * Sets ActionListeners for all coin buttons.
+     *
+     * @param actionListener The ActionListener to be set for each coin button.
+     */
     public void setCoinButtonsListeners(ActionListener actionListener){
         for (JButton coinButton : this.coinButtons){
             coinButton.addActionListener(actionListener);
         }
     }
 
+    /**
+     * Sets ActionListeners for all bill buttons.
+     *
+     * @param actionListener The ActionListener to be set for each bill button.
+     */
     public void setBillButtonsListeners(ActionListener actionListener){
         for (JButton billButton : this.billButtons){
             billButton.addActionListener(actionListener);
         }
     }
 
+
+    /**
+     * ActionListener for the Confirm button in the cash insertion GUI.
+     */
     private class ConfirmButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -334,6 +389,9 @@ public class VendingView {
         }
     }
 
+    /**
+     * Withdraws the cash inserted by the user and resets the amount label.
+     */
     public void withdrawInsertedCash(){
         cashFrame.setVisible(false);
         currentAmount = 0.0;
@@ -341,10 +399,22 @@ public class VendingView {
         amountLabel.validate();
     }
 
+    /**
+     * Sets the ActionListener for the Cancel button in the cash insertion GUI.
+     *
+     * @param actionListener The ActionListener to be set for the Cancel button.
+     */
     public void setCancelButtonListener(ActionListener actionListener){
         this.cancelButton.addActionListener(actionListener);
     }
 
+
+    /**
+     * Converts the coin value from its image filename to its corresponding double value.
+     *
+     * @param coinValue The filename of the coin image.
+     * @return The double value of the coin.
+     */
     private double convertCoinValue(String coinValue){
 
         switch (coinValue){
@@ -372,6 +442,9 @@ public class VendingView {
         return 0;
     }
 
+    /**
+     * Updates the input field displaying the current user input.
+     */
     private void updateInputField() {
         // inputField.setText(currentInput);
         screenLabel.setForeground(Color.BLACK);
@@ -379,6 +452,9 @@ public class VendingView {
             screenLabel.setText(currentInput);
     }
 
+    /**
+     * ActionListener for number input buttons (0-9 and Clear).
+     */
     private class NumberInputListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -394,6 +470,9 @@ public class VendingView {
         }
     }
 
+    /**
+     * Updates the GUI with the item received by the user.
+     */
     public void updateReceivedItem(){
 
         this.currentAmount = 0.0;
@@ -426,6 +505,11 @@ public class VendingView {
         }
     }
 
+    /**
+     * Updates the GUI with the change denomination to be given to the user.
+     *
+     * @param message The message containing the change denomination details.
+     */
     public void updateReceivedChange(String message){
 
         dispensedItemPanel.remove(getButton);
@@ -445,6 +529,11 @@ public class VendingView {
 
     }
 
+    /**
+     * Displays a popup window which shows the returned inserted money of the user.
+     *
+     * @param message The message containing the denominations of the returned money.
+     */
     public void returnInsertedMoney(String message){
 
         String[] messageParts = message.split("-");
@@ -487,6 +576,12 @@ public class VendingView {
 
     }
 
+
+    /**
+     * Displays an error message in the GUI and temporarily locks the keypad.
+     *
+     * @param errorMessage The error message to be displayed.
+     */
     public void displayError(String errorMessage){
         screenLabel.setText(errorMessage);
         screenLabel.setForeground(Color.RED);
@@ -494,6 +589,12 @@ public class VendingView {
         temporaryKeypadLock();
     }
 
+    /**
+     * Displays an error message in the GUI and temporarily locks the keypad.
+     * Additionally, displays the withdrawal popup (of cash) to the user
+     *
+     * @param errorMessage The error message to be displayed.
+     */
     public void displayErrorWithdraw(String errorMessage){
         screenLabel.setText(errorMessage);
         screenLabel.setForeground(Color.RED);
@@ -502,14 +603,10 @@ public class VendingView {
         temporaryKeypadLock();
     }
 
-    public void displaySuccess(String message){
-        screenLabel.setText(message);
-        screenLabel.setForeground(Color.GREEN);
-        screenLabel.validate();
-        updateReceivedItem();
-        temporaryKeypadLock();
-    }
-
+    /**
+     * Temporarily locks the keypad to prevent user input while displaying an error message.
+     * After a short delay, the keypad will be unlocked.
+     */
     private void temporaryKeypadLock(){  // temporarily disables keypad while errors are present
         disableKeypad();
         Timer t = new Timer(2000, new ActionListener() {
@@ -525,15 +622,28 @@ public class VendingView {
         t.start();
     }
 
+    /**
+     * Disables the keypad (number input buttons).
+     */
     private void disableKeypad(){
         setPanelEnabled(this.keypadPanel, false);
     }
 
+    /**
+     * Enables the keypad (number input buttons).
+     */
     private void enableKeypad(){
         setPanelEnabled(this.keypadPanel, true);
     }
 
-    void setPanelEnabled(JPanel panel, Boolean isEnabled) { // Function based on answer of Kesavamoorthi on StackOverflow: https://stackoverflow.com/questions/19324918/how-to-disable-all-components-in-a-jpanel
+    /**
+     * Recursively sets the enabled status for all components in a JPanel.
+     * Function based on answer of Kesavamoorthi on StackOverflow: <a href="https://stackoverflow.com/questions/19324918/how-to-disable-all-components-in-a-jpanel">...</a>
+     *
+     * @param panel      The JPanel to modify.
+     * @param isEnabled  The flag indicating whether to enable or disable the components.
+     */
+    void setPanelEnabled(JPanel panel, Boolean isEnabled) {
         panel.setEnabled(isEnabled);
 
         Component[] components = panel.getComponents();
@@ -546,29 +656,59 @@ public class VendingView {
         }
     }
 
+    /**
+     * Closes the popup window displaying the received item.
+     */
     public void closeReceivedPanel(){
         receivedFrame.setVisible(false);
         receivedFrame.dispose();
     }
 
+    /**
+     * Sets the ActionListener for the Purchase button in the main GUI.
+     *
+     * @param actionListener The ActionListener to be set for the Purchase button.
+     */
     public void setPurchaseButtonListener(ActionListener actionListener){
         this.purchaseButton.addActionListener(actionListener);
     }
 
+    /**
+     * Sets the ActionListener for the GET button in the received item popup window.
+     *
+     * @param actionListener The ActionListener to be set for the GET button.
+     */
     public void setGetButtonListener(ActionListener actionListener){
         this.getButton.addActionListener(actionListener);
     }
 
+    /**
+     * Sets the ActionListener for the cash insert button in the main GUI.
+     *
+     * @param actionListener The ActionListener to be set for the cash insert button.
+     */
     public void setCashInsertButtonListener(ActionListener actionListener){
         this.cashInsertButton.addActionListener(actionListener);
     }
 
+    /**
+     * Retrieves the number input provided by the user.
+     *
+     * @return The integer value of the user's number input.
+     */
     public int getNumberInput(){
         return Integer.parseInt(currentInput.trim());
     }
 
+    /**
+     * Closes the current window (main GUI).
+     */
     public void disposeCurrentWindow(){
-        this.frame.dispose();
+        try {
+            this.frame.dispose();
+        } catch (NullPointerException e) {
+            System.out.println("Window currently not in view.");
+        }
     }
 }
 
