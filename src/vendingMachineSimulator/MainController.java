@@ -441,7 +441,7 @@ public class MainController {
                 String message = "";
 
                 if (specialVendingView.getSelectedBaseIndexes().size() == 0 || specialVendingView.getSelectedAddonIndexes().size() == 0){
-                    System.out.println("Halo-halo");
+                    System.out.println("Ramen");
                 }
                 else {
 
@@ -453,7 +453,7 @@ public class MainController {
                     }
 
                     System.out.println("Selected: " + (specialVendingView.getNumberInput() - 10));
-                    message = mainModel.purchaseSpecialItem(specialVendingView.getNumberInput() - 10, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
+                    message = mainModel.purchaseSpecialItem(0, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
                     System.out.println(message);
 
                     if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
@@ -493,7 +493,7 @@ public class MainController {
                     }
 
                     System.out.println("Selected: " + (specialVendingView.getNumberInput() - 10));
-                    message = mainModel.purchaseSpecialItem(specialVendingView.getNumberInput() - 10, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
+                    message = mainModel.purchaseSpecialItem(1, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
                     System.out.println(message);
 
                     if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){
@@ -535,7 +535,7 @@ public class MainController {
                     }
 
                     System.out.println("Selected: " + (specialVendingView.getNumberInput() - 10));
-                    message = mainModel.purchaseSpecialItem(specialVendingView.getNumberInput() - 10, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
+                    message = mainModel.purchaseSpecialItem(2, specialVendingView.getSelectedBaseIndexes(), specialVendingView.getSelectedAddonIndexes());
                     System.out.println(message);
 
                     if (Objects.equals(message, "INSUFFICIENT FUNDS") || Objects.equals(message, "CAN'T GET CHANGE")){

@@ -462,34 +462,34 @@ public class SpecialVendingView {
                 ImageIcon toppingIcon4 = new ImageIcon(getClass().getResource("resources/addons/chickenslices.png"));
 
                 JButton shioBroth = new JButton(brothIcon1);
-                shioBroth.setToolTipText("Shio Broth");
+                shioBroth.setToolTipText("<html>" + "Shio Broth" + "<br>" + "Calories: " + itemCalories.get(9) + "<br>" + itemAmounts.get(9) + " In Stock" + "</html>");
                 shioBroth.setPreferredSize(buttonSize);
                 JButton misoBroth = new JButton(brothIcon2);
-                misoBroth.setToolTipText("Miso Broth");
+                misoBroth.setToolTipText("<html>" + "Miso Broth" + "<br>" + "Calories: " + itemCalories.get(10) + "<br>" + itemAmounts.get(10) + " In Stock" + "</html>");
                 misoBroth.setPreferredSize(buttonSize);
                 JButton ukkokeiBroth = new JButton(brothIcon3);
-                ukkokeiBroth.setToolTipText("Ukkokei Broth");
+                ukkokeiBroth.setToolTipText("<html>" + "Ukkokei Broth" + "<br>" + "Calories: " + itemCalories.get(11) + "<br>" + itemAmounts.get(11) + " In Stock" + "</html>");
                 ukkokeiBroth.setPreferredSize(buttonSize);
                 JButton tonkotsuBroth = new JButton(brothIcon4);
-                tonkotsuBroth.setToolTipText("Tonkotsu Broth");
+                tonkotsuBroth.setToolTipText("<html>" + "Tonkotsu Broth" + "<br>" + "Calories: " + itemCalories.get(12) + "<br>" + itemAmounts.get(12) + " In Stock" + "</html>");
                 tonkotsuBroth.setPreferredSize(buttonSize);
                 JButton sobaNoodles = new JButton(noodleIcon1);
-                sobaNoodles.setToolTipText("Soba Noodles");
+                sobaNoodles.setToolTipText("<html>" + "Soba Noodles" + "<br>" + "Calories: " + itemCalories.get(4) + "<br>" + itemAmounts.get(4) + " In Stock" + "</html>");
                 sobaNoodles.setPreferredSize(buttonSize);
                 JButton udonNoodles = new JButton(noodleIcon2);
-                udonNoodles.setToolTipText("Udon Noodles");
+                udonNoodles.setToolTipText("<html>" + "Udon Noodles" + "<br>" + "Calories: " + itemCalories.get(5) + "<br>" + itemAmounts.get(5) + " In Stock" + "</html>");
                 udonNoodles.setPreferredSize(buttonSize);
                 JButton fishCake = new JButton(toppingIcon1);
-                fishCake.setToolTipText("Fish Cake");
+                fishCake.setToolTipText("<html>" + "Fish Cake" + "<br>" + "Calories: " + itemCalories.get(7) + "<br>" + itemAmounts.get(7) + " In Stock" + "</html>");
                 fishCake.setPreferredSize(buttonSize);
                 JButton chasuPork = new JButton(toppingIcon2);
-                chasuPork.setToolTipText("Chasu Pork");
+                chasuPork.setToolTipText("<html>" + "Chasu Pork" + "<br>" + "Calories: " + itemCalories.get(8) + "<br>" + itemAmounts.get(8) + " In Stock" + "</html>");
                 chasuPork.setPreferredSize(buttonSize);
                 JButton saltedEgg = new JButton(toppingIcon3);
-                saltedEgg.setToolTipText("Salted Egg");
+                saltedEgg.setToolTipText("<html>" + "Salted Egg" + "<br>" + "Calories: " + itemCalories.get(13) + "<br>" + itemAmounts.get(13) + " In Stock" + "</html>");
                 saltedEgg.setPreferredSize(buttonSize);
                 JButton chickenSlices = new JButton(toppingIcon4);
-                chickenSlices.setToolTipText("Chicken Slices");
+                chickenSlices.setToolTipText("<html>" + "Chicken Slices" + "<br>" + "Calories: " + itemCalories.get(15) + "<br>" + itemAmounts.get(15) + " In Stock" + "</html>");
                 chickenSlices.setPreferredSize(buttonSize);
 
                 // Counters for checking the base and addons
@@ -696,7 +696,7 @@ public class SpecialVendingView {
                 saltedEgg.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        selectedAddonIndexes.add(10); // Salted Egg index
+                        selectedAddonIndexes.add(13); // Salted Egg index
 
                         addonCounter[0]++;
 
@@ -710,7 +710,7 @@ public class SpecialVendingView {
                             selectedRamenToppingsMessage[0] += ", ";
                         }
 
-                        ramenCalorieCounter[0] += itemCalories.get(10);
+                        ramenCalorieCounter[0] += itemCalories.get(13);
                         totalCalories.setText("Total Calories: " + ramenCalorieCounter[0]);
                         totalCaloriesContainer.add(totalCalories);
 
@@ -733,7 +733,7 @@ public class SpecialVendingView {
                 chickenSlices.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        selectedAddonIndexes.add(11); // Chicken Slices index
+                        selectedAddonIndexes.add(15); // Chicken Slices index
 
                         addonCounter[0]++;
 
@@ -747,7 +747,7 @@ public class SpecialVendingView {
                             selectedRamenToppingsMessage[0] += ", ";
                         }
 
-                        ramenCalorieCounter[0] += itemCalories.get(11);
+                        ramenCalorieCounter[0] += itemCalories.get(15);
                         totalCalories.setText("Total Calories: " + ramenCalorieCounter[0]);
                         totalCaloriesContainer.add(totalCalories);
 
@@ -873,16 +873,16 @@ public class SpecialVendingView {
                 ImageIcon icon3 = new ImageIcon(getClass().getResource("resources/addons/tocino.png"));
 
                 JButton regularRice = new JButton(baseIcon1);
-                regularRice.setToolTipText("Plain Rice");
+                regularRice.setToolTipText("<html>" + "Plain Rice" + "<br>" + "Calories: " + itemCalories.get(2) + "<br>" + itemAmounts.get(2) + " In Stock" + "</html>");
                 JButton javaRice = new JButton(baseIcon2);
-                javaRice.setToolTipText("Java Rice");
+                javaRice.setToolTipText("<html>" + "Java Rice" + "<br>" + "Calories: " + itemCalories.get(3) + "<br>" + itemAmounts.get(3) + " In Stock" + "</html>");
 
                 JButton bacon = new JButton(icon1);
-                bacon.setToolTipText("Bacon");
+                bacon.setToolTipText("<html>" + "Bacon" + "<br>" + "Calories: " + itemCalories.get(17) + "<br>" + itemAmounts.get(17) + " In Stock" + "</html>");
                 JButton tapa = new JButton(icon2);
-                tapa.setToolTipText("Tapa");
+                tapa.setToolTipText("<html>" + "Tapa" + "<br>" + "Calories: " + itemCalories.get(18) + "<br>" + itemAmounts.get(18) + " In Stock" + "</html>");
                 JButton tocino = new JButton(icon3);
-                tocino.setToolTipText("Tocino");
+                tocino.setToolTipText("<html>" + "Plain Rice" + "<br>" + "Calories: " + itemCalories.get(19) + "<br>" + itemAmounts.get(19) + " In Stock" + "</html>");
 
                 regularRice.setPreferredSize(buttonSize);
                 javaRice.setPreferredSize(buttonSize);
@@ -1129,17 +1129,17 @@ public class SpecialVendingView {
                 ImageIcon addonIcon6 = new ImageIcon(getClass().getResource("resources/addons/langka.png"));
 
                 JButton nuts = new JButton(addonIcon1);
-                nuts.setToolTipText("Nuts");
+                nuts.setToolTipText("<html>" + "Nuts" + "<br>" + "Calories: " + itemCalories.get(20) + "<br>" + itemAmounts.get(20) + " In Stock" + "</html>");
                 JButton nataDeCoco = new JButton(addonIcon2);
-                nataDeCoco.setToolTipText("Nata de Coco");
+                nataDeCoco.setToolTipText("<html>" + "Nata de Coco" + "<br>" + "Calories: " + itemCalories.get(21) + "<br>" + itemAmounts.get(21) + " In Stock" + "</html>");
                 JButton macapuno = new JButton(addonIcon3);
-                macapuno.setToolTipText("Macapuno");
+                macapuno.setToolTipText("<html>" + "Macapuno" + "<br>" + "Calories: " + itemCalories.get(22) + "<br>" + itemAmounts.get(22) + " In Stock" + "</html>");
                 JButton lecheFlan = new JButton(addonIcon4);
-                lecheFlan.setToolTipText("Leche Flan");
+                lecheFlan.setToolTipText("<html>" + "Leche Flan" + "<br>" + "Calories: " + itemCalories.get(23) + "<br>" + itemAmounts.get(23) + " In Stock" + "</html>");
                 JButton bananaSlices = new JButton(addonIcon5);
-                bananaSlices.setToolTipText("Banana Slices");
+                bananaSlices.setToolTipText("<html>" + "Banana Slices" + "<br>" + "Calories: " + itemCalories.get(24) + "<br>" + itemAmounts.get(24) + " In Stock" + "</html>");
                 JButton langka = new JButton(addonIcon6);
-                langka.setToolTipText("Langka");
+                langka.setToolTipText("<html>" + "Langka" + "<br>" + "Calories: " + itemCalories.get(25) + "<br>" + itemAmounts.get(25) + " In Stock" + "</html>");
 
 
                 // Counter for the number of times the selection button is pressed
